@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from django.conf import settings
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegistrationSerializer
 
