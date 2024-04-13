@@ -1,10 +1,12 @@
+from django.conf import settings
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt import tokens
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from django.conf import settings
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegistrationSerializer
-from rest_framework.response import Response
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -70,3 +72,32 @@ class RegistrationView(generics.CreateAPIView):
         )
 
         return response
+
+class LogoutView(APIView):
+    # Handle POST requests for logging out users
+    def post(self, request):
+        try:
+            refreshToken = request.COOKIES.get(
+                settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+            token = tokens.RefreshToken(refreshToken)
+            token.blacklist()
+
+            response = Response({'LoggedOut'})
+            response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+            response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+            # response.delete_cookie("X-CSRFToken")
+            # response.delete_cookie("csrftoken")
+            # response["X-CSRFToken"]=None
+        
+            return response
+        except tokens.TokenError as e:
+            response = Response({'LoggedOut'})
+            response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+            response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+            # response.delete_cookie("X-CSRFToken")
+            # response.delete_cookie("csrftoken")
+            # response["X-CSRFToken"]=None
+        
+            return response
+        except Exception as e:
+            raise exceptions.ParseError("Invalid token")
