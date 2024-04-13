@@ -85,19 +85,45 @@ class LogoutView(APIView):
             response = Response({'LoggedOut'})
             response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
             response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
-            # response.delete_cookie("X-CSRFToken")
-            # response.delete_cookie("csrftoken")
-            # response["X-CSRFToken"]=None
-        
+
             return response
+
         except tokens.TokenError as e:
             response = Response({'LoggedOut'})
             response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
             response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
-            # response.delete_cookie("X-CSRFToken")
-            # response.delete_cookie("csrftoken")
-            # response["X-CSRFToken"]=None
         
             return response
         except Exception as e:
             raise exceptions.ParseError("Invalid token")
+
+class RefreshTokenView(APIView):
+    # Handle POST requests for refreshing access tokens
+    def post(self, request):
+        refresh_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'])
+        if not refresh_token:
+            return Response({'error': 'Refresh token is missing'}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            token = RefreshToken(refresh_token)
+            new_access_token = str(token.access_token)
+            new_refresh_token = str(token)
+            response = Response()
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                value=new_access_token,
+                expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            )
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
+                value=new_refresh_token,
+                expires=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
+            )
+            return response
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
