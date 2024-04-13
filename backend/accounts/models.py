@@ -3,8 +3,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=100, null=True, blank=True)
-    last_name = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     dob = models.DateField(null=True, blank=True, verbose_name="Date of Birth")
@@ -16,4 +15,4 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
+    

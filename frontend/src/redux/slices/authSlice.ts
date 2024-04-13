@@ -38,26 +38,65 @@ export const login = createAsyncThunk(
   }
 )
 
-const userLoginSlice = createSlice({
-  name: 'userLogin',
+export const register = createAsyncThunk(
+  'user/register',
+  async (
+    { name, username, email, password, confirmPassword }: 
+    { name: string; username: string; email: string; password: string, confirmPassword: string }, 
+    { rejectWithValue }
+  ) => {
+    try {
+      const config = {
+        headers: {
+          'Content-type': 'application/json'
+        }
+      }
+      const { data } = await axios.post(`/api/user/register/`, { name, username, email, password, confirmPassword }, config);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+      return rejectWithValue(err.response?.data);
+    }
+  }
+)
+
+const authSlice = createSlice({
+  name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    resetUserInfo: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userInfo = action.payload;
+        state.error = null;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.userInfo = null;
+        state.error = action.payload ? Object.values(action.payload).join('\n') : 'Registration failed';
+      })
       .addCase(login.pending, (state) => {
-        state.loading = true
+        state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false
-        state.userInfo = action.payload
-        state.error = null
+        state.loading = false;
+        state.userInfo = action.payload;
+        state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false
-        state.userInfo = null
-        state.error = action.error.message || null
+        state.loading = false;
+        state.userInfo = null;
+        state.error = action.error.message || null;
       })
   }
-})
+});
 
-export default userLoginSlice.reducer
+export default authSlice.reducer;
+export const { resetUserInfo } = authSlice.actions;

@@ -22,12 +22,12 @@ import {
 import { Input } from "../../components/ui/input";
 import { useToast } from "../../components/ui/use-toast";
 import { SigninValidation } from "../../lib/validation";
-
+import { resetUserInfo } from "../../redux/slices/authSlice";
 
 const SigninForm = () => {
   const userLogin = useSelector((state: RootState) => state.user);
   const { 
-    userInfo: loggedinUser, 
+    // userInfo: loggedinUser, 
     error, 
     loading: isLoading 
   } = userLogin;
@@ -44,21 +44,21 @@ const SigninForm = () => {
     },
   });
 
-  // useEffect(() => {
-  //   if (error) {
-  //     toast({ title: "Incorrect email or password. Please try again." });
-  //   }
-  //   if (!error && loggedinUser) {
-  //     form.reset();
-  //     navigate("/");
-  //   }
-  // }, [error, toast, navigate, form, loggedinUser]);
+  useEffect(() => {
+    if (error) {
+      toast({ title: "Incorrect email or password. Please try again." });
+      dispatch(resetUserInfo());
+    }
+  }, [error, toast, dispatch]);
   
 
   const handleSignin = async (user: z.infer<typeof SigninValidation>) => {
     dispatch(login(user));
+    if (!error) {
+      form.reset();
+      navigate("/");
+    }
   };
-
 
   return (
     <Form {...form}>

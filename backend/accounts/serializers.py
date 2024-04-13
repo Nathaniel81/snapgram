@@ -26,23 +26,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-    password_confirm = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    confirmPassword = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     tokens = serializers.SerializerMethodField(read_only=True)
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'password_confirm', 'tokens', 'token']
+        fields = ['id', 'username', 'name', 'email', 'password', 'confirmPassword', 'tokens', 'token']
         read_only_fields = ['id']
 
     def validate(self, data):
-        if data['password'] != data['password_confirm']:
+        if data['password'] != data['confirmPassword']:
             raise serializers.ValidationError("Passwords do not match.")
         return data
     
     def save(self, validated_data):
-        validated_data.pop('password_confirm')
+        validated_data.pop('confirmPassword')
         user = User.objects.create(
+            name=validated_data['name'],
             username=validated_data['username'],
             email=validated_data['email']
         )
@@ -51,13 +52,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
         
         validated_data['id'] = user.id
 
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        
-        validated_data['tokens'] = {
-            'refresh': str(refresh),
-            'access': access_token
-        }
-        validated_data['token'] = access_token
+        refresh_token = RefreshToken.for_user(user)
+        access_token = str(refresh_token.access_token)
+
+        validated_data['access_token'] = access_token
+        validated_data['refresh_token'] = refresh_token
 
         return validated_data
