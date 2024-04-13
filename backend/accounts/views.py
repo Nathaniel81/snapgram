@@ -163,6 +163,7 @@ class RefreshTokenView(APIView):
     """
     Custom view for refreshing access tokens.
     """
+
     def post(self, request):
         """
         Handle POST request for refreshing access tokens.
