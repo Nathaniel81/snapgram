@@ -9,10 +9,13 @@ import { INavLink } from "../../types";
 import { sidebarLinks } from "../../constants";
 import Loader from "./Loader";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 
 import { useSignOutAccount } from "../../lib/react-query/queries";
+import { useEffect } from "react";
+import { resetUserInfo } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
 
 
 const LeftSidebar = () => {
@@ -22,17 +25,27 @@ const LeftSidebar = () => {
       loading: isLoading
     } = userLogin;
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const { pathname } = useLocation();
 
-  const { mutate: signOut } = useSignOutAccount();
+  const { mutate: signOut, isSuccess } = useSignOutAccount();
 
   const handleSignOut = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     signOut();
-    navigate("/sign-in");
+    dispatch(resetUserInfo());
+    // navigate("/sign-in");
   };
+
+  useEffect(() => {
+    if(!user) navigate("/sign-in")
+  }, [navigate, user]);
+
+  useEffect(() => {
+    if (isSuccess) navigate(0);
+  }, [isSuccess, navigate]);
 
   return (
     <nav className="leftsidebar">
