@@ -43,7 +43,7 @@ const Home = () => {
         </div>
       );
     }
-  
+
     return (
       <div className="flex flex-1">
         <div className="home-container">

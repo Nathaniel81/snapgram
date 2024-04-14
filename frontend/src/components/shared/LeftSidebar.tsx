@@ -31,8 +31,6 @@ const LeftSidebar = () => {
   ) => {
     e.preventDefault();
     signOut();
-    // setIsAuthenticated(false);
-    // setUser(INITIAL_USER);
     navigate("/sign-in");
   };
 
