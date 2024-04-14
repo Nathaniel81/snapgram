@@ -6,7 +6,10 @@ import { AppDispatch } from "../../redux/store";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link, 
+  // useNavigate 
+} from "react-router-dom";
 import * as z from "zod";
 
 import Loader from "../../components/shared/Loader";
@@ -33,7 +36,7 @@ const SigninForm = () => {
   } = userLogin;
 
   const { toast } = useToast();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const form = useForm<z.infer<typeof SigninValidation>>({
@@ -56,7 +59,7 @@ const SigninForm = () => {
     dispatch(login(user));
     if (!error) {
       form.reset();
-      navigate("/");
+      // navigate("/");
     }
   };
 

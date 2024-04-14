@@ -55,10 +55,6 @@ const SignupForm = () => {
   // Handler
   const handleSignup = async (user: z.infer<typeof SignupValidation>) => {
     dispatch(register(user))
-    // if (!error) {
-    //   form.reset();
-    //   navigate("/");
-    // }
   }
 
   useEffect(() => {

@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios, { AxiosError } from 'axios'
+import { IUser } from '../../types'
 
-interface User {access: string}
 
 interface UserState {
-  userInfo: User | null;
+  userInfo: IUser | null;
   loading: boolean;
   error: string | null;
 }
