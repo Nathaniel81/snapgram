@@ -1,13 +1,16 @@
 import { useEffect } from "react";
-import { 
-    Link, 
-    useNavigate
+import {
+  Link,
+  useNavigate
 } from "react-router-dom";
 
-import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/rootReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useSignOutAccount } from "../../lib/react-query/queries";
+import { RootState } from "../../redux/rootReducer";
+import { resetUserInfo } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
+import { Button } from "../ui/button";
+
 
 const Topbar = () => {
   const navigate = useNavigate();
@@ -15,8 +18,17 @@ const Topbar = () => {
   const { 
     userInfo: user,
   } = userLogin;
+  const dispatch = useDispatch<AppDispatch>();
 
   const { mutate: signOut, isSuccess } = useSignOutAccount();
+
+  const handleSignOut = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    signOut();
+    dispatch(resetUserInfo());
+  };
 
   useEffect(() => {
     if (isSuccess) navigate(0);
@@ -38,7 +50,7 @@ const Topbar = () => {
           <Button
             variant="ghost"
             className="shad-button_ghost"
-            onClick={() => signOut()}>
+            onClick={(e) => handleSignOut(e)}>
             <img src="/assets/icons/logout.svg" alt="logout" />
           </Button>
           <Link to={`/profile/${user?.id}`} className="flex-center gap-3">
