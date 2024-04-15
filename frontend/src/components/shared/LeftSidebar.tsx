@@ -36,7 +36,6 @@ const LeftSidebar = () => {
     e.preventDefault();
     signOut();
     dispatch(resetUserInfo());
-    // navigate("/sign-in");
   };
 
   useEffect(() => {
