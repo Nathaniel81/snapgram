@@ -1,13 +1,17 @@
 import {
     useQuery,
     useMutation,
-    useQueryClient,
+    // useQueryClient,
     // useInfiniteQuery,
 } from "@tanstack/react-query";
 import axios from 'axios';
-import { INewPost } from "../../types";
+import { 
+  // INewPost, 
+  Post 
+} from "../../types";
 
 import { QUERY_KEYS } from "./queryKeys";
+
 
 const getUsers = async (limit?: number) => {
   const response = await axios.get('/api/user', {
@@ -37,27 +41,44 @@ export const useSignOutAccount = () => {
   });
 };
 
+// export const createPost = async (post: FormData) => {
+//   console.log(post)
+//   const config = {
+//     withCredentials: true,
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   }
+//   const response = await axios.post('/api/post/create/', post, config);
+//   return response.data;
+// };
 
+// export const useCreatePost = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: (post: FormData) => createPost(post),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({
+//         queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+//       });
+//     },
+//   });
+// };
 
-export const createPost = async (post: INewPost) => {
+export const getRecentPosts = async (): Promise<Post[]> => {
   const config = {
     withCredentials: true,
     headers: {
       "Content-Type": "application/json",
     },
   }
-  const response = await axios.post('/api/post/create/', post, config);
+  const response = await axios.get<Post[]>('/api/post/recent', config);
   return response.data;
 };
 
-export const useCreatePost = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (post: INewPost) => createPost(post),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-      });
-    },
+export const useGetRecentPosts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+    queryFn: getRecentPosts,
   });
 };
