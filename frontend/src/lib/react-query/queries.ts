@@ -105,3 +105,58 @@ export const useLikePost = () => {
     },
   });
 };
+
+export const unlikePost = async (postId: string) => {
+  const response = await axios.post(`/api/post/${postId}/unlike/`);
+  return response.data;
+};
+export const useUnlikePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+    }: {
+      postId: string;
+    }) => unlikePost(postId),
+    onSuccess: (data) => {
+      console.log(data)
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+export const savePost = async (postId: string) => {
+  const response = await axios.post(`/api/post/${postId}/save/`);
+  return response.data;
+};
+export const useSavePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ postId }: { postId: string }) =>
+      savePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+export const deleteSavedPost = async (postId: string) => {
+  const response = await axios.post(`/api/post/${postId}/unsave/`);
+  return response.data;
+};
+export const useDeleteSavedPost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ postId }: { postId: string }) =>
+      deleteSavedPost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
