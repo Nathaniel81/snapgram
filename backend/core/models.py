@@ -12,6 +12,7 @@ class Post(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    saved_by = models.ManyToManyField(User, related_name='saved_posts', blank=True)
 
     # def __str__(self):
     #     return self.creator.id

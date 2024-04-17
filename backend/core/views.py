@@ -73,3 +73,43 @@ class UnlikePostView(generics.GenericAPIView):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.likes.remove(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SavePostView(generics.GenericAPIView):
+    """
+    View for saving a post.
+
+    This view allows authenticated users to save a post.
+    """
+
+    authentication_classes = [CustomAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST request for saving a post.
+
+        This method adds the authenticated user to the 'saved_by' field of the post.
+        """
+
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        post.saved_by.add(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UnsavePostView(generics.GenericAPIView):
+    """
+    View for unsaving a post.
+
+    This view allows authenticated users to unsave a post.
+    """
+
+    authentication_classes = [CustomAuthentication]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST request for unsaving a post.
+
+        This method removes the authenticated user from the 'saved_by' field of the post.
+        """
+
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        post.saved_by.remove(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
