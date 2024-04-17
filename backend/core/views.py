@@ -113,3 +113,13 @@ class UnsavePostView(generics.GenericAPIView):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.saved_by.remove(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    View for retrieving, updating, and deleting a single post.
+
+    This view allows users to retrieve, update, or delete a specific post.
+    """
+
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer

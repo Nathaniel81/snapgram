@@ -15,7 +15,7 @@ const PostCard = ({ post }: PostCardProps) => {
   const { 
       userInfo: user, 
     } = userLogin;
-// //   const navigate = useNavigate();
+// const navigate = useNavigate();
 
 //   if (!post.creator) return;
 

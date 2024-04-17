@@ -8,7 +8,7 @@ import { Input } from "../ui/input";
 import { INewPost } from "../../types";
 import { useToast } from "../ui/use-toast";
 import axios from 'axios';
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Loader from "../shared/Loader";
 import { PostValidation } from "../../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,9 +22,10 @@ type PostFormProps = {
 const PostForm = ({ post, action }: PostFormProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [fileUrl, setFileUrl] = useState<string>();
   const fileInput = useRef<HTMLInputElement>(null);
+
   
   const form = useForm({
     defaultValues: {
@@ -34,14 +35,23 @@ const PostForm = ({ post, action }: PostFormProps) => {
     },
     resolver: zodResolver(PostValidation),
   });
-  const { formState: { errors } } = form;
+  const { formState: { errors }, setValue } = form;
+
+  useEffect(() => {
+    setValue("location", post?.location || "");
+    setValue("tags", post?.tags || "");
+    if (post?.file) {
+      setFileUrl(post?.file);
+    }
+  }, [post, setValue]);
   
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   console.log('Selected File: ', selectedFile);
+  console.log('Action: ', action, action === 'Update');
 
 
   const handleSubmit = form.handleSubmit(async (values) => {
-    setIsLoadingCreate(true);
+    setIsLoading(true);
     const formData = new FormData();
     if (selectedFile) {
       formData.append('file', selectedFile);
@@ -50,17 +60,30 @@ const PostForm = ({ post, action }: PostFormProps) => {
     formData.append('caption', values.caption);
     formData.append('location', values.location);
     formData.append('tags', values.tags);
-  
-    try {
-      const { data } = await axios.post('/api/post/create/', formData);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: `${action} post failed. Please try again.`,
-      });
+
+    if (action === 'Create') {
+      try {
+        const { data } = await axios.post('/api/post/create/', formData);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+        toast({
+          title: `${action} post failed. Please try again.`,
+        });
+      }
+    } else {
+      try {
+        const { data } = await axios.patch(`/api/post/${post?.id}/`, formData);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+        toast({
+          title: `${action} post failed. Please try again.`,
+        });
+      }
     }
-    setIsLoadingCreate(false);
+  
+    setIsLoading(false);
     navigate("/");
   });
   
@@ -136,7 +159,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
       <div>
         <label className="shad-form_label">Add Location</label>
         <div className="py-5">
-          <Input type="text" className="shad-input" {...form.register("location")} />
+          <Input
+           type="text" 
+          //  value={location} 
+           className="shad-input" {...form.register("location")} />
         </div>
         {errors.caption && <div className="shad-form_message">{errors.caption.message}</div>}
       </div>
@@ -144,7 +170,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
       <div>
         <label className="shad-form_label">Add Tags (separated by comma " , ")</label>
         <div className="py-5">
-          <Input type="text" className="shad-input" {...form.register("tags")} />
+          <Input
+           type="text" 
+          //  value={tags} 
+           className="shad-input" {...form.register("tags")} />
         </div>
         {errors.caption && <div className="shad-form_message">{errors.caption.message}</div>}
       </div>
@@ -159,8 +188,8 @@ const PostForm = ({ post, action }: PostFormProps) => {
         <Button
           type="submit"
           className="shad-button_primary whitespace-nowrap"
-          disabled={isLoadingCreate}>
-          {(isLoadingCreate) && <Loader />}
+          disabled={isLoading}>
+          {(isLoading) && <Loader />}
           {action} Post
         </Button>
       </div>

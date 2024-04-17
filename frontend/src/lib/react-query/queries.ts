@@ -160,3 +160,17 @@ export const useDeleteSavedPost = () => {
     },
   });
 };
+
+
+export const getPostById = async (postId: string) => {
+  const response = await axios.get(`/api/post/${postId}/`);
+  return response.data;
+};
+
+export const useGetPostById = (postId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
+    queryFn: () => getPostById(postId!),
+    enabled: !!postId,
+  });
+};
