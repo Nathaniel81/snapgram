@@ -4,6 +4,7 @@ import { multiFormatDateString } from "../../lib/utils";
 import { Post } from "../../types";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
+import PostStats from "./PostStats";
 
 type PostCardProps = {
   post: Post;
@@ -78,7 +79,7 @@ const PostCard = ({ post }: PostCardProps) => {
         className="post-card_img"
       />
       </Link>
-    {/* <PostStats post={post} userId={user.id} /> */}
+    <PostStats post={post} />
     </div>
   );
 };

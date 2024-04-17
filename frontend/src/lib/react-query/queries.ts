@@ -1,7 +1,7 @@
 import {
     useQuery,
     useMutation,
-    // useQueryClient,
+    useQueryClient,
     // useInfiniteQuery,
 } from "@tanstack/react-query";
 import axios from 'axios';
@@ -13,6 +13,8 @@ import {
 import { QUERY_KEYS } from "./queryKeys";
 
 
+// Users Queries
+
 const getUsers = async (limit?: number) => {
   const response = await axios.get('/api/user', {
     params: {
@@ -21,7 +23,6 @@ const getUsers = async (limit?: number) => {
   });
   return response.data;
 };
-
 export const useGetUsers = (limit?: number) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USERS],
@@ -34,12 +35,14 @@ const signOutAccount = async () => {
   localStorage.removeItem('userInfo');
   return response.data;
 };
-
 export const useSignOutAccount = () => {
   return useMutation({
     mutationFn: signOutAccount,
   });
 };
+
+
+//Post Queries
 
 // export const createPost = async (post: FormData) => {
 //   console.log(post)
@@ -75,10 +78,30 @@ export const getRecentPosts = async (): Promise<Post[]> => {
   const response = await axios.get<Post[]>('/api/post/recent', config);
   return response.data;
 };
-
 export const useGetRecentPosts = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
     queryFn: getRecentPosts,
+  });
+};
+
+export const likePost = async (postId: string) => {
+  const response = await axios.post(`/api/post/${postId}/like/`);
+  return response.data;
+};
+export const useLikePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+    }: {
+      postId: string;
+    }) => likePost(postId),
+    onSuccess: (data) => {
+      console.log(data)
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
   });
 };
