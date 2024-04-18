@@ -12,11 +12,12 @@ import { Button } from "../ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 
-import { useSignOutAccount } from "../../lib/react-query/queries";
+// import { useSignOutAccount } from "../../lib/react-query/queries";
 import { useEffect } from "react";
 import { resetUserInfo } from "../../redux/slices/authSlice";
 import { AppDispatch } from "../../redux/store";
-
+import axios from "axios";
+import { useToast } from "../ui/use-toast";
 
 const LeftSidebar = () => {
   const userLogin = useSelector((state: RootState) => state.user);
@@ -27,24 +28,31 @@ const LeftSidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { pathname } = useLocation();
+  const { toast } = useToast();
 
-  const { mutate: signOut, isSuccess } = useSignOutAccount();
+  // const { mutate: signOut, isSuccess } = useSignOutAccount();
 
   const handleSignOut = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    signOut();
-    dispatch(resetUserInfo());
+    // signOut();
+    try {
+      await axios.post('/api/user/logout/');
+      localStorage.removeItem('userInfo');
+      dispatch(resetUserInfo());
+    } catch (error) {
+      toast({title: 'Something went wrong'})
+    }
   };
 
   useEffect(() => {
     if(!user) navigate("/sign-in")
   }, [navigate, user]);
 
-  useEffect(() => {
-    if (isSuccess) navigate(0);
-  }, [isSuccess, navigate]);
+  // useEffect(() => {
+  //   if (isSuccess) navigate(0);
+  // }, [isSuccess, navigate]);
 
   return (
     <nav className="leftsidebar">
@@ -105,7 +113,7 @@ const LeftSidebar = () => {
       </div>
 
       <Button
-        variant="ghost"
+        variant="link"
         className="shad-button_ghost"
         onClick={(e) => handleSignOut(e)}>
         <img src="/assets/icons/logout.svg" alt="logout" />

@@ -15,7 +15,7 @@ const Home = () => {
     const { 
         userInfo, 
       } = userLogin;
-      const navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!userInfo) {

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useToast } from "../ui/use-toast";
 
@@ -13,13 +13,21 @@ import {
 } from "../../lib/react-query/queries";
 
 import { Post } from "../../types";
+import { resetUserInfo } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
 
+interface AxiosError extends Error {
+  response?: {
+    status: number;
+  };
+}
 type PostStatsProps = {
   post: Post;
 };
 
 
 const PostStats = ({ post }: PostStatsProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const userLogin = useSelector((state: RootState) => state.user);
   const {
         userInfo: user, 
@@ -27,10 +35,10 @@ const PostStats = ({ post }: PostStatsProps) => {
   const { toast } = useToast();
 
   const checkIsLiked = (likeList: string[], userId?: string) => {
-    if (userId) return likeList.includes(userId)
+    if (userId) return likeList.includes(userId);
   };
   const checkIsSaved = (savedList: string[], userId?: string) => {
-    if (userId) return savedList.includes(userId)
+    if (userId) return savedList.includes(userId);
   };
 
   const location = useLocation();
@@ -41,32 +49,86 @@ const PostStats = ({ post }: PostStatsProps) => {
   const [likes, setLikes] = useState<string[]>(likesList ?? []);
   const [saved, setSaved] = useState<string[]>(savedList ?? []);
 
-  const { mutate: likePost, error: likeError } = useLikePost();
-  const { mutate: unlikePost, error: unlikeError } = useUnlikePost();
-  const { mutate: savePost } = useSavePost();
-  const { mutate: deleteSavedPost } = useDeleteSavedPost();
+  const { mutate: likePost, error: likeErr} = useLikePost();
+  const likeError = likeErr as AxiosError;
 
-  if (likeError || unlikeError) return toast({titile: 'An Error Occured. Please try again' })
+  const { mutate: unlikePost, error: unlikeErr } = useUnlikePost();
+  const unlikeError = unlikeErr as AxiosError;
+  
+  const { mutate: savePost, error: saveErr } = useSavePost();
+  const saveError = saveErr as AxiosError;
+
+  const { mutate: deleteSavedPost, error: deleteErr } = useDeleteSavedPost();
+  const deleteError = deleteErr as AxiosError;
+
+  useEffect(() => {
+    let likesArray = [...likes];
+    if (likeError) {
+      likesArray = likesArray.filter((Id) => Id !== user?.id);
+      setLikes(likesArray);
+      if (likeError.response?.status === 403) {
+        toast({title: 'You must be logged in to like a post'})
+        dispatch(resetUserInfo())
+      } else {
+        toast({title: 'An error occurred while liking the post'})
+      }
+    }
+    if (unlikeError) {
+      likesArray.push(user?.id ?? '');
+      setLikes(likesArray);
+      if (unlikeError.response?.status === 403) {
+        toast({title: 'You must be logged in to like a post'})
+        dispatch(resetUserInfo())
+      } else {
+        toast({title: 'An error occurred while liking the post'})
+      }
+    }
+    // eslint-disable-next-line
+  }, [likeError, unlikeError]);
+
+  useEffect(() => {
+    let savedArray = [...saved];
+    if (saveError) {
+      savedArray = savedArray.filter((Id) => Id !== user?.id);
+      setSaved(savedArray);
+      if (saveError.response?.status === 403) {
+        toast({title: 'You must be logged in to save a post'})
+        dispatch(resetUserInfo())
+      } else {
+        toast({title: 'An error occurred while saving the post'})
+      }
+    }
+    if (deleteError) {
+      savedArray.push(user?.id ?? '');
+      setSaved(savedArray);
+      if (deleteError.response?.status === 403) {
+        toast({title: 'You must be logged in to save a post'})
+        dispatch(resetUserInfo())
+      } else {
+        toast({title: 'An error occurred while saving the post'})
+      }
+    }
+    // eslint-disable-next-line
+  }, [deleteError, saveError]);
+
 
   const handleLikePost = (
       e: React.MouseEvent<HTMLImageElement, MouseEvent>
     ) => {
       e.stopPropagation();
-      if (!user) return toast({titile: 'Login to like a post' })
       
       const userIdString = user?.id ?? '';
-      
+  
       let likesArray = [...likes];
       if (userIdString && likesArray.includes(userIdString)) {
+        unlikePost({ postId: post.id })
         likesArray = likesArray.filter((Id) => Id !== userIdString);
-        unlikePost({ postId: post.id });
       } else {
+        likePost({ postId: post.id })
         likesArray.push(userIdString);
-        likePost({ postId: post.id });
       }
       setLikes(likesArray);
     };
-  
 
   const handleSavePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -74,7 +136,7 @@ const PostStats = ({ post }: PostStatsProps) => {
     e.stopPropagation();
 
     const userIdString = user?.id ?? '';
-      
+
     let savedArray = [...saved];
     if (userIdString && savedArray.includes(userIdString)) {
       savedArray = savedArray.filter((Id) => Id !== userIdString);

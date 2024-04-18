@@ -85,10 +85,11 @@ export const useGetRecentPosts = () => {
   });
 };
 
+
 export const likePost = async (postId: string) => {
-  const response = await axios.post(`/api/post/${postId}/like/`);
-  return response.data;
-};
+    const response = await axios.post(`/api/post/${postId}/like/`);
+    return response.data;
+}
 export const useLikePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -107,8 +108,8 @@ export const useLikePost = () => {
 };
 
 export const unlikePost = async (postId: string) => {
-  const response = await axios.post(`/api/post/${postId}/unlike/`);
-  return response.data;
+    const response = await axios.post(`/api/post/${postId}/unlike/`);
+    return response.data;
 };
 export const useUnlikePost = () => {
   const queryClient = useQueryClient();
@@ -166,11 +167,40 @@ export const getPostById = async (postId: string) => {
   const response = await axios.get(`/api/post/${postId}/`);
   return response.data;
 };
-
 export const useGetPostById = (postId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
     queryFn: () => getPostById(postId!),
     enabled: !!postId,
+  });
+};
+
+export const deletePost = async (postId?: string) => {
+  const response = await axios.delete(`/api/post/${postId}/`);
+  return response.data;
+};
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ postId }: { postId?: string; }) =>
+      deletePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+
+export const getUserPosts = async (userId: string) => {
+  const response = await axios.get(`/api/post/user/${userId}/`);
+  return response.data;
+};
+export const useGetUserPosts = (userId?: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+    queryFn: () => getUserPosts(userId!),
+    enabled: !!userId,
   });
 };
