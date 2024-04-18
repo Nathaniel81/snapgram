@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .authenticate import CustomAuthentication
 from .models import Post
 from .serializers import PostSerializer
+from accounts.models import User
 
 
 class PostCreateView(generics.CreateAPIView):
@@ -32,7 +33,7 @@ class RecentPostsView(generics.ListAPIView):
 
     queryset = Post.objects.all().order_by('-id')[:10]
     serializer_class = PostSerializer
-
+from rest_framework.exceptions import PermissionDenied
 
 class LikePostView(generics.GenericAPIView):
     """
@@ -49,6 +50,9 @@ class LikePostView(generics.GenericAPIView):
 
         This method adds the authenticated user to the 'likes' field of the post.
         """
+
+        if request.user.is_anonymous:
+            raise PermissionDenied("You must be logged in to like a post")
 
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.likes.add(request.user)
@@ -70,6 +74,9 @@ class UnlikePostView(generics.GenericAPIView):
         This method removes the authenticated user from the 'likes' field of the post.
         """
 
+        if request.user.is_anonymous:
+            raise PermissionDenied("You must be logged in to unlike a post")
+
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.likes.remove(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -89,6 +96,9 @@ class SavePostView(generics.GenericAPIView):
 
         This method adds the authenticated user to the 'saved_by' field of the post.
         """
+
+        if request.user.is_anonymous:
+            raise PermissionDenied("You must be logged in to save a post")
 
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.saved_by.add(request.user)
@@ -110,6 +120,9 @@ class UnsavePostView(generics.GenericAPIView):
         This method removes the authenticated user from the 'saved_by' field of the post.
         """
 
+        if request.user.is_anonymous:
+            raise PermissionDenied("You must be logged in to unsave a post")
+
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         post.saved_by.remove(request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -123,3 +136,21 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+class UserPostsView(generics.ListAPIView):
+    """
+    View for retrieving posts created by a specific user.
+
+    This view returns a list of posts created by a particular user.
+    """
+
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        """
+        Get the queryset of posts created by a specific user.
+
+        This method filters the queryset to include only posts created by the specified user.
+        """
+        user = get_object_or_404(User, id=self.kwargs.get('pk'))
+        return Post.objects.filter(creator=user)

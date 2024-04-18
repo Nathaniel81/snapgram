@@ -101,7 +101,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'communigram.wsgi.application'
 
 SIMPLE_JWT = {
-  'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3000),
+  'ACCESS_TOKEN_LIFETIME': timedelta(seconds=3000),
   'REFRESH_TOKEN_LIFETIME': timedelta(minutes=6000),
   'ROTATE_REFRESH_TOKENS': False,
   'BLACKLIST_AFTER_ROTATION': True,
