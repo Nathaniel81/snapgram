@@ -197,3 +197,24 @@ class SearchPostsView(generics.ListAPIView):
         query = self.request.query_params.get('query', '')
         queryset = Post.objects.filter(Q(caption__icontains=query))
         return queryset
+
+class SavedPostsView(generics.ListAPIView):
+    """
+    View for listing saved posts.
+
+    This view returns a list of posts saved by the authenticated user.
+    """
+
+    serializer_class = PostSerializer
+    authentication_classes = [CustomAuthentication]
+
+    def get_queryset(self):
+        """
+        Get the queryset of saved posts for the authenticated user.
+
+        This method filters the queryset to include only posts saved by the authenticated user.
+        """
+
+        user = self.request.user
+        queryset = Post.objects.filter(saved_by=user)
+        return queryset
