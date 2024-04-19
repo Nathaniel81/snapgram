@@ -16,10 +16,6 @@ const GridPostList = ({
   showUser = true,
   showStats = true,
 }: GridPostListProps) => {
-  // const userLogin = useSelector((state: RootState) => state.user);
-  // const { 
-  //     userInfo: user,
-  //   } = userLogin;
 
   return (
     <ul className="grid-container">

@@ -2,7 +2,7 @@ import {
     useQuery,
     useMutation,
     useQueryClient,
-    // useInfiniteQuery,
+    useInfiniteQuery,
 } from "@tanstack/react-query";
 import axios from 'axios';
 import { 
@@ -204,3 +204,35 @@ export const useGetUserPosts = (userId?: string) => {
     enabled: !!userId,
   });
 };
+
+
+const INFINITE_SCROLL_PAGINATION_RESULTS = 6;
+export const useGetPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: async ({ pageParam = 1 }) => {
+      const query =
+          `/api/post?limit=${INFINITE_SCROLL_PAGINATION_RESULTS}&page=${pageParam}`
+      const { data } = await axios.get(query);
+      return data;
+  },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.next) {
+        return pages.length + 1;
+      }
+  },
+  });
+};
+
+export const searchPosts = async (searchTerm: string) => {
+  const response = await axios.get(`/api/post/search?query=${searchTerm}`);
+  return response.data;
+};
+export const useSearchPosts = (searchTerm: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
+    queryFn: () => searchPosts(searchTerm),
+    enabled: !!searchTerm,
+  });
+}

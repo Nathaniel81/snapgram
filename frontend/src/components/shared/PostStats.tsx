@@ -34,9 +34,12 @@ const PostStats = ({ post }: PostStatsProps) => {
       } = userLogin;
   const { toast } = useToast();
 
+  // Function to check if a post is liked by the user
   const checkIsLiked = (likeList: string[], userId?: string) => {
     if (userId) return likeList.includes(userId);
   };
+
+  // Function to check if a post is saved by the user
   const checkIsSaved = (savedList: string[], userId?: string) => {
     if (userId) return savedList.includes(userId);
   };

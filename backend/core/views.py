@@ -1,12 +1,15 @@
+from accounts.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .authenticate import CustomAuthentication
 from .models import Post
 from .serializers import PostSerializer
-from accounts.models import User
+from django.db.models import Q
 
 
 class PostCreateView(generics.CreateAPIView):
@@ -33,7 +36,6 @@ class RecentPostsView(generics.ListAPIView):
 
     queryset = Post.objects.all().order_by('-id')[:10]
     serializer_class = PostSerializer
-from rest_framework.exceptions import PermissionDenied
 
 class LikePostView(generics.GenericAPIView):
     """
@@ -152,5 +154,46 @@ class UserPostsView(generics.ListAPIView):
 
         This method filters the queryset to include only posts created by the specified user.
         """
+
         user = get_object_or_404(User, id=self.kwargs.get('pk'))
         return Post.objects.filter(creator=user)
+
+class PostPagination(PageNumberPagination):
+    """
+    Pagination class for posts.
+
+    This pagination class sets the page size to 6 posts per page.
+    """
+
+    page_size = 6
+
+class PostsListView(generics.ListAPIView):
+    """
+    View for listing posts.
+
+    This view returns a paginated list of all posts, ordered by the 'updatedAt' field.
+    """
+
+    serializer_class = PostSerializer
+    queryset = Post.objects.all().order_by('-updatedAt')
+    pagination_class = PostPagination
+
+class SearchPostsView(generics.ListAPIView):
+    """
+    View for searching posts.
+
+    This view returns a list of posts filtered by a search query.
+    """
+
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        """
+        Get the queryset of posts filtered by a search query.
+
+        This method filters the queryset to include only posts containing the search query in their caption.
+        """
+
+        query = self.request.query_params.get('query', '')
+        queryset = Post.objects.filter(Q(caption__icontains=query))
+        return queryset
