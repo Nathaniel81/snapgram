@@ -236,3 +236,15 @@ export const useSearchPosts = (searchTerm: string) => {
     enabled: !!searchTerm,
   });
 }
+
+
+export const savedPosts = async () => {
+  const response = await axios.get(`/api/post/saved`);
+  return response.data;
+};
+export const useSavedPosts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_POSTS],
+    queryFn: () => savedPosts(),
+  });
+}
