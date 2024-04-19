@@ -2,6 +2,8 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
+from cloudinary.utils import cloudinary_url
+
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -10,6 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     This serializer is used to serialize User objects.
     """
     isAdmin = serializers.SerializerMethodField(read_only=True)
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -22,6 +25,13 @@ class UserSerializer(serializers.ModelSerializer):
     def get__id(self, obj):
         """Get the id field value."""
         return obj.id
+
+    def get_profile_picture(self, obj):
+        """Get the URL of the user's profile picture."""
+        if obj.profile_picture:
+            return cloudinary_url(obj.profile_picture.public_id)[0]
+
+        return None
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """

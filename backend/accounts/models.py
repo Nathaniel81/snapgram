@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from cloudinary.models import CloudinaryField
 
 
 class User(AbstractUser):
@@ -7,7 +8,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     dob = models.DateField(null=True, blank=True, verbose_name="Date of Birth")
-    profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg', null=True, blank=True)
+    profile_picture = CloudinaryField('image', null=True, blank=True)
     bio = models.TextField(max_length=500, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
