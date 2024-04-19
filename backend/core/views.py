@@ -218,3 +218,24 @@ class SavedPostsView(generics.ListAPIView):
         user = self.request.user
         queryset = Post.objects.filter(saved_by=user)
         return queryset
+
+class LikedPostsView(generics.ListAPIView):
+    """
+    View for listing liked posts.
+
+    This view returns a list of posts liked by the authenticated user.
+    """
+
+    serializer_class = PostSerializer
+    authentication_classes = [CustomAuthentication]
+
+    def get_queryset(self):
+        """
+        Get the queryset of liked posts for the authenticated user.
+
+        This method filters the queryset to include only posts liked by the authenticated user.
+        """
+
+        user = self.request.user
+        queryset = Post.objects.filter(likes=user)
+        return queryset

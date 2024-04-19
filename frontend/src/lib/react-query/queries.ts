@@ -248,3 +248,14 @@ export const useSavedPosts = () => {
     queryFn: () => savedPosts(),
   });
 }
+
+export const likedPosts = async () => {
+  const response = await axios.get(`/api/post/liked`);
+  return response.data;
+};
+export const useLikedPosts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_LIKED_POSTS],
+    queryFn: () => likedPosts(),
+  });
+}

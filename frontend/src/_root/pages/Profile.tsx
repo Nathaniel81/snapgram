@@ -28,14 +28,14 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 
 const Profile = () => {
   const { id } = useParams();
-  const { data: userPosts } = useGetUserPosts(id);
+  const { data: userPosts, isLoading } = useGetUserPosts(id);
   const { pathname } = useLocation();
   const userLogin = useSelector((state: RootState) => state.user);
   const { 
       userInfo: currentUser, 
     } = userLogin;
 
-  if (!currentUser)
+  if (!currentUser || isLoading)
     return (
       <div className="flex-center w-full h-full">
         <Loader />
