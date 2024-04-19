@@ -19,7 +19,7 @@ const GridPostList = ({
 
   return (
     <ul className="grid-container">
-      {posts.map((post) => (
+      {posts?.map((post) => (
         <li key={post?.id} className="relative min-w-80 h-80">
           <Link to={`/posts/${post?.id}`} className="grid-post_link">
             <img
@@ -34,7 +34,7 @@ const GridPostList = ({
               <div className="flex items-center justify-start gap-2 flex-1">
                 <img
                   src={
-                    post?.creator?.imageUrl ||
+                    post?.creator?.profile_picture ||
                     "/assets/icons/profile-placeholder.svg"
                   }
                   alt="creator"
