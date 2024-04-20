@@ -11,8 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     This serializer is used to serialize User objects.
     """
+
     isAdmin = serializers.SerializerMethodField(read_only=True)
-    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -26,12 +26,33 @@ class UserSerializer(serializers.ModelSerializer):
         """Get the id field value."""
         return obj.id
 
-    def get_profile_picture(self, obj):
-        """Get the URL of the user's profile picture."""
-        if obj.profile_picture:
-            return cloudinary_url(obj.profile_picture.public_id)[0]
+    def update(self, instance, validated_data):
+        """
+        Update the user profile.
 
-        return None
+        This method overrides the default update method to handle file upload for the profile picture.
+        """
+        # Get the file data from the request
+        file = self.context['request'].FILES.get('file')
+        user = super().update(instance, validated_data)
+        if file:
+            # Assign the file data to the user's profile picture then save it.
+            user.profile_picture = file
+            user.save()
+        return user
+
+    def to_representation(self, instance):
+        """
+        Convert the Post instance to a representation.
+
+        This method overrides the default to_representation method to include the file URL.
+        """
+
+        representation = super().to_representation(instance)
+        if instance.profile_picture:
+            # Add the file URL to the representation
+            representation['profile_picture'] = cloudinary_url(instance.profile_picture.public_id)[0]
+        return representation
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
@@ -39,6 +60,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     This serializer is used to add additional user data to the token obtain pair response.
     """
+
     def validate(self, attrs):
         """
         Validate the token obtain pair serializer data.
@@ -51,6 +73,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         Returns:
             dict: The validated data.
         """
+
         data = super().validate(attrs)
         serializer = UserSerializer(self.user).data
         for k, v in serializer.items():
@@ -63,6 +86,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     This serializer is used to create user accounts.
     """
+
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     confirmPassword = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     tokens = serializers.SerializerMethodField(read_only=True)
@@ -88,6 +112,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         Raises:
             serializers.ValidationError: If passwords do not match.
         """
+
         if data['password'] != data['confirmPassword']:
             raise serializers.ValidationError("Passwords do not match.")
         return data
@@ -105,6 +130,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         Returns:
             dict: The validated data.
         """
+
         validated_data.pop('confirmPassword')
         user = User.objects.create(
             name=validated_data['name'],
