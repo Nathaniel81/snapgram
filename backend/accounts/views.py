@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User
 from .serializers import MyTokenObtainPairSerializer, RegistrationSerializer, UserSerializer
+from core.authenticate import CustomAuthentication
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -235,3 +236,23 @@ class UserListView(generics.ListAPIView):
             return User.objects.all()[:int(limit)]
         else:
             return User.objects.all()
+
+class UserUpdateView(generics.UpdateAPIView):
+    """
+    View for updating user profile.
+
+    This view allows authenticated users to update their own profile.
+    """
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = [CustomAuthentication]
+
+    def get_object(self):
+        """Get the user object."""
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        print(request.data)
+        print(request.FILES)
+        return super().update(request, *args, **kwargs)
