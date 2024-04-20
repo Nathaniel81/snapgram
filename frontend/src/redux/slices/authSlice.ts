@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction  } from '@reduxjs/toolkit'
 import axios, { AxiosError } from 'axios'
 import { IUser } from '../../types'
 
@@ -66,6 +66,12 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     resetUserInfo: () => initialState,
+    //eslint-disable-next-line
+    updateUser: (state, action: PayloadAction<any>) => {
+      if (state.userInfo) {
+        state.userInfo = action.payload;
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -99,4 +105,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { resetUserInfo } = authSlice.actions;
+export const { resetUserInfo, updateUser } = authSlice.actions;

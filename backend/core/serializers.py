@@ -17,20 +17,6 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
 
-    def create(self, validated_data):
-        """
-        Create a new Post instance.
-
-        This method overrides the default create method to handle file upload.
-
-        """
-        file = validated_data.pop('file', None)
-        post = super().create(validated_data)
-        if file:
-            post.file = file
-            post.save()
-        return post
-
     def to_representation(self, instance):
         """
         Convert the Post instance to a representation.

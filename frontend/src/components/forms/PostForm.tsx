@@ -46,9 +46,6 @@ const PostForm = ({ post, action }: PostFormProps) => {
   }, [post, setValue]);
   
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  console.log('Selected File: ', selectedFile);
-  console.log('Action: ', action, action === 'Update');
-
 
   const handleSubmit = form.handleSubmit(async (values) => {
     setIsLoading(true);
@@ -161,10 +158,9 @@ const PostForm = ({ post, action }: PostFormProps) => {
         <div className="py-5">
           <Input
            type="text" 
-          //  value={location} 
            className="shad-input" {...form.register("location")} />
         </div>
-        {errors.caption && <div className="shad-form_message">{errors.caption.message}</div>}
+        {errors.location && <div className="shad-form_message">{errors.location.message}</div>}
       </div>
 
       <div>
@@ -172,10 +168,9 @@ const PostForm = ({ post, action }: PostFormProps) => {
         <div className="py-5">
           <Input
            type="text" 
-          //  value={tags} 
            className="shad-input" {...form.register("tags")} />
         </div>
-        {errors.caption && <div className="shad-form_message">{errors.caption.message}</div>}
+        {errors.tags && <div className="shad-form_message">{errors.tags.message}</div>}
       </div>
 
       <div className="flex gap-4 items-center justify-end">
