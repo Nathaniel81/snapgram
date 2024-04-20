@@ -34,6 +34,7 @@ const Profile = () => {
   const { 
       userInfo: currentUser, 
     } = userLogin;
+  
 
   if (!currentUser || isLoading)
     return (
@@ -76,11 +77,11 @@ const Profile = () => {
           </div>
 
           <div className="flex justify-center gap-4">
-            <div className={`${id !== currentUser?.id && "hidden"}`}>
+            <div className={`${id != currentUser?.id && "hidden"}`}>
               <Link
                 to={`/update-profile/${currentUser?.id}`}
                 className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
-                  id !== currentUser?.id && "hidden"
+                  id != currentUser?.id && "hidden"
                 }`}>
                 <img
                   src={"/assets/icons/edit.svg"}
@@ -93,7 +94,7 @@ const Profile = () => {
                 </p>
               </Link>
             </div>
-            <div className={`${id === id && "hidden"}`}>
+            <div className={`${id == id && "hidden"}`}>
               <Button type="button" className="shad-button_primary px-8">
                 Follow
               </Button>
@@ -102,7 +103,7 @@ const Profile = () => {
         </div>
       </div>
 
-      {currentUser?.id === id && (
+      {currentUser?.id == id && (
         <div className="flex max-w-5xl w-full">
           <Link
             to={`/profile/${id}`}
@@ -138,7 +139,7 @@ const Profile = () => {
           index
           element={<GridPostList posts={userPosts} showUser={false} />}
         />
-        {currentUser?.id === id && (
+        {currentUser?.id == id && (
           <Route path="/liked-posts" element={<LikedPosts />} />
         )}
       </Routes>
