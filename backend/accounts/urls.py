@@ -10,4 +10,3 @@ urlpatterns = [
     path('<str:pk>/', views.GetUserView.as_view(), name='user'),
     path('', views.UserListView.as_view(), name='users_list'),
 ]
-
