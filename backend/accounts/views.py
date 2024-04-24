@@ -256,3 +256,13 @@ class UserUpdateView(generics.UpdateAPIView):
         print(request.data)
         print(request.FILES)
         return super().update(request, *args, **kwargs)
+
+class GetUserView(generics.RetrieveAPIView):
+    """
+    View for getting a user by ID.
+
+    This view returns a user serialized using the UserSerializer.
+    """
+
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
