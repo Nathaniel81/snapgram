@@ -40,6 +40,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -98,7 +100,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'communigram.wsgi.application'
+# WSGI_APPLICATION = 'communigram.wsgi.application'
+ASGI_APPLICATION = 'communigram.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 SIMPLE_JWT = {
   'ACCESS_TOKEN_LIFETIME': timedelta(seconds=3000),
