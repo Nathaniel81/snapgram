@@ -17,6 +17,7 @@ from rest_framework_simplejwt import authentication as jwt_authentication
 from django.conf import settings
 from rest_framework import authentication, exceptions as rest_exceptions
 from django.middleware.csrf import CsrfViewMiddleware
+from asgiref.sync import sync_to_async
 
 
 def enforce_csrf(request):
@@ -75,3 +76,28 @@ class CustomAuthentication(jwt_authentication.JWTAuthentication):
         # enforce_csrf(request)
 
         return self.get_user(validated_token), validated_token
+
+    @sync_to_async
+    def authenticate_with_token(self, raw_token):
+        """
+        Authenticate the user based on the httponly cookie access_token for a Websocket connection.
+
+        Parameters:
+        - request (HttpRequest): The HTTP request object.
+
+        Returns:
+        - tuple or None: A tuple of (user, validated_token) if authentication is successful,
+          or None if authentication fails.
+        """
+
+        if raw_token is None:
+            return None, None
+        
+        try:
+            validated_token = self.get_validated_token(raw_token)
+        except Exception as e:
+            return None, None
+        
+        user = self.get_user(validated_token)
+        print('USER: ', user)
+        return user, validated_token
