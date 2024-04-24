@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .authenticate import CustomAuthentication
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Message
+from .serializers import PostSerializer, MessageSerializer
 from django.db.models import Q
 
 
@@ -239,3 +239,16 @@ class LikedPostsView(generics.ListAPIView):
         user = self.request.user
         queryset = Post.objects.filter(likes=user)
         return queryset
+
+class MessageListAPIView(generics.ListAPIView):
+    """
+    View for listing Room Messages.
+
+    This view returns a list of messages on a room.
+    """
+
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        room_name = self.kwargs.get('room_name')
+        return Message.objects.filter(room__name=room_name)
