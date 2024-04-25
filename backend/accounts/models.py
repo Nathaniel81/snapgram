@@ -12,6 +12,10 @@ class User(AbstractUser):
 
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
+    @property
+    def friends(self):
+        return User.objects.filter(following=self, followers__in=[self])
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 

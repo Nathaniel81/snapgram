@@ -8,12 +8,17 @@ from cloudinary.utils import cloudinary_url
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'username', 'email', 'profile_picture']
+        fields = ['id']
 
 class FollowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'username', 'email', 'profile_picture']
+        fields = ['id']
+
+class FriendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id']
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -24,10 +29,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     followers = FollowerSerializer(many=True, read_only=True)
     following = FollowingSerializer(many=True, read_only=True)
+    friends = FriendSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture', 'followers', 'following']
+        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture', 'followers', 'following', 'friends']
 
     def get__id(self, obj):
         """Get the id field value."""
