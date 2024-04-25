@@ -39,6 +39,9 @@ export type INavLink = {
     email: string;
     profile_picture: string;
     bio: string;
+    followers: IUser[];
+    following: IUser[];
+    friends: IUser[];
   };
   
   export type INewUser = {

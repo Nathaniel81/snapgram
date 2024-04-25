@@ -1,4 +1,6 @@
-import { useSelector } from "react-redux";
+import axios from 'axios';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
   Outlet,
@@ -10,9 +12,22 @@ import {
 import GridPostList from "../../components/shared/GridPostList";
 import Loader from "../../components/shared/Loader";
 import { Button } from "../../components/ui/button";
-import { useGetUserPosts } from "../../lib/react-query/queries";
+import { useToast } from "../../components/ui/use-toast";
+import {
+  useFollowUserToggle,
+  useGetUser,
+  useGetUserPosts
+} from "../../lib/react-query/queries";
 import { RootState } from "../../redux/rootReducer";
+import { resetUserInfo, updateUser } from "../../redux/slices/authSlice";
+import { AppDispatch } from "../../redux/store";
 import LikedPosts from "./LikedPosts";
+
+interface AxiosError extends Error {
+  response?: {
+    status: number;
+  };
+}
 
 interface StabBlockProps {
   value: string | number;
@@ -28,15 +43,46 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 
 const Profile = () => {
   const { id } = useParams();
+  // const parsedId = parseInt(id ?? '', 10);
+  const { toast } = useToast();
   const { data: userPosts, isLoading } = useGetUserPosts(id);
   const { pathname } = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: user, isLoading: isUserLoading } = useGetUser(id ?? '');
+  const { mutate: followUser, error: followErr, isSuccess } = useFollowUserToggle();
+  const followError = followErr as AxiosError;
+  
   const userLogin = useSelector((state: RootState) => state.user);
   const { 
       userInfo: currentUser, 
     } = userLogin;
-  
 
-  if (!currentUser || isLoading)
+    useEffect(() => {
+      const fetchData = async () => {
+        if (followError) {
+          if (followError.response?.status === 403) {
+            console.log('Error');
+            toast({ title: 'You must be logged in to follow a user' });
+            dispatch(resetUserInfo());
+          } else {
+            toast({ title: 'An error occurred while following the user' });
+          }
+        }
+        if (isSuccess) {
+          try {
+            const response = await axios.get(`/api/user/${currentUser?.id}/`);
+            dispatch(updateUser(response.data));
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      };
+    
+      fetchData();
+    }, [followError, isSuccess, dispatch, currentUser?.id, toast]);
+    
+  
+  if (!currentUser || isLoading || isUserLoading)
     return (
       <div className="flex-center w-full h-full">
         <Loader />
@@ -49,7 +95,7 @@ const Profile = () => {
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           <img
             src={
-              currentUser?.profile_picture || "/assets/icons/profile-placeholder.svg"
+              user?.profile_picture || "/assets/icons/profile-placeholder.svg"
             }
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
@@ -57,22 +103,22 @@ const Profile = () => {
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
               <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full">
-                {currentUser?.name}
+                {user?.name}
               </h1>
               <p className="small-regular md:body-medium text-light-3 text-center xl:text-left">
-                @{currentUser?.username}
+                @{user?.username}
               </p>
             </div>
 
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={userPosts?.length} label="Posts" />
 
-              <StatBlock value={20} label="Followers" />
-              <StatBlock value={20} label="Following" />
+              <StatBlock value={user?.followers.length} label="Followers" />
+              <StatBlock value={user?.following.length} label="Following" />
             </div>
 
             <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
-              {currentUser?.bio}
+              {user?.bio}
             </p>
           </div>
 
@@ -94,9 +140,15 @@ const Profile = () => {
                 </p>
               </Link>
             </div>
-            <div className={`${id == id && "hidden"}`}>
-              <Button type="button" className="shad-button_primary px-8">
-                Follow
+            <div className={`${id === currentUser?.id && "hidden"}`}>
+              <Button 
+                type="button" 
+                className="shad-button_primary px-8"
+                onClick={() => followUser({id})}
+              >
+                {currentUser && currentUser.friends.some(user => user.id == id) ? "Friends" :
+                 (currentUser && currentUser.following.some(user => user.id == id) ? "Following" :
+                 (currentUser && currentUser.followers.some(user => user.id == id) ? "Followback" : "Follow"))}
               </Button>
             </div>
           </div>

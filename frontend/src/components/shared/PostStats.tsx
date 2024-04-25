@@ -70,20 +70,20 @@ const PostStats = ({ post }: PostStatsProps) => {
       likesArray = likesArray.filter((Id) => Id !== user?.id);
       setLikes(likesArray);
       if (likeError.response?.status === 403) {
-        toast({title: 'You must be logged in to like a post'})
-        dispatch(resetUserInfo())
+        toast({title: 'You must be logged in to like a post'});
+        dispatch(resetUserInfo());
       } else {
-        toast({title: 'An error occurred while liking the post'})
+        toast({title: 'An error occurred while liking the post'});
       }
     }
     if (unlikeError) {
       likesArray.push(user?.id ?? '');
       setLikes(likesArray);
       if (unlikeError.response?.status === 403) {
-        toast({title: 'You must be logged in to like a post'})
-        dispatch(resetUserInfo())
+        toast({title: 'You must be logged in to like a post'});
+        dispatch(resetUserInfo());
       } else {
-        toast({title: 'An error occurred while liking the post'})
+        toast({title: 'An error occurred while liking the post'});
       }
     }
     // eslint-disable-next-line
@@ -95,20 +95,20 @@ const PostStats = ({ post }: PostStatsProps) => {
       savedArray = savedArray.filter((Id) => Id !== user?.id);
       setSaved(savedArray);
       if (saveError.response?.status === 403) {
-        toast({title: 'You must be logged in to save a post'})
-        dispatch(resetUserInfo())
+        toast({title: 'You must be logged in to save a post'});
+        dispatch(resetUserInfo());
       } else {
-        toast({title: 'An error occurred while saving the post'})
+        toast({title: 'An error occurred while saving the post'});
       }
     }
     if (deleteError) {
       savedArray.push(user?.id ?? '');
       setSaved(savedArray);
       if (deleteError.response?.status === 403) {
-        toast({title: 'You must be logged in to save a post'})
-        dispatch(resetUserInfo())
+        toast({title: 'You must be logged in to save a post'});
+        dispatch(resetUserInfo());
       } else {
-        toast({title: 'An error occurred while saving the post'})
+        toast({title: 'An error occurred while saving the post'});
       }
     }
     // eslint-disable-next-line
@@ -124,10 +124,10 @@ const PostStats = ({ post }: PostStatsProps) => {
   
       let likesArray = [...likes];
       if (userIdString && likesArray.includes(userIdString)) {
-        unlikePost({ postId: post.id })
+        unlikePost({ postId: post.id });
         likesArray = likesArray.filter((Id) => Id !== userIdString);
       } else {
-        likePost({ postId: post.id })
+        likePost({ postId: post.id });
         likesArray.push(userIdString);
       }
       setLikes(likesArray);
@@ -143,7 +143,7 @@ const PostStats = ({ post }: PostStatsProps) => {
     let savedArray = [...saved];
     if (userIdString && savedArray.includes(userIdString)) {
       savedArray = savedArray.filter((Id) => Id !== userIdString);
-      deleteSavedPost({ postId: post.id })
+      deleteSavedPost({ postId: post.id });
     } else {
       savedArray.push(userIdString);
       savePost({ postId: post.id });

@@ -41,15 +41,37 @@ export const useGetSearchedUsers = (searchTerm: string) => {
   });
 };
 
-const getUser = async (id?: string) => {
+const getUser = async (id: string) => {
   const response = await axios.get(`/api/user/${id}/`);
   return response.data;
 };
 export const useGetUser = (id: string) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID, id],
     queryFn: () => getUser(id),
   });
+};
+
+
+export const followUserToggle = async (id: string) => {
+  const response = await axios.patch(`/api/user/follow/${id}/`);
+  return response.data;
+}
+export const useFollowUserToggle = () => {
+const queryClient = useQueryClient();
+return useMutation({
+  mutationFn: ({
+    id,
+  }: {
+    id?: string;
+  }) => followUserToggle(id ?? ''),
+  onSuccess: (data) => {
+    console.log(data)
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+    });
+  },
+});
 };
 
 const signOutAccount = async () => {
