@@ -82,7 +82,7 @@ const Home = () => {
               {creators?.map((creator: IUser) => (
                 <li key={creator?.id} 
                 className='cursor-pointer' 
-                onClick={() => navigate(`chat/${creator?.id}`)}>
+                >
                   <UserCard user={creator} />
                 </li>
               ))}
