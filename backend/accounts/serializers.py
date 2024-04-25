@@ -12,15 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
     This serializer is used to serialize User objects.
     """
 
-    isAdmin = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
         model = User
-        fields = ['id', 'username', 'name', 'email', 'isAdmin', 'bio', 'profile_picture']
-
-    def get_isAdmin(self, obj):
-        """Get the isAdmin field value."""
-        return obj.is_staff
+        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture']
 
     def get__id(self, obj):
         """Get the id field value."""

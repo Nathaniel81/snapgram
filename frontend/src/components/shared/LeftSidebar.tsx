@@ -41,6 +41,7 @@ const LeftSidebar = () => {
       await axios.post('/api/user/logout/');
       localStorage.removeItem('userInfo');
       dispatch(resetUserInfo());
+      navigate('/')
     } catch (error) {
       toast({title: 'Something went wrong'})
     }

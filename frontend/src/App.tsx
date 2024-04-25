@@ -13,6 +13,7 @@ import {
   PostDetails,
   UpdateProfile,
   AllUsers,
+  Chat
  } from "./_root/pages";
 import RootLayout from "./_root/pages/RootLayout";
 import "./globals.css";
@@ -35,6 +36,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/saved" element={<Saved />} />
+              <Route path="/chat/:id" element={<Chat />} />
               <Route path="/all-users" element={<AllUsers />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/update-post/:id" element={<EditPost />} />

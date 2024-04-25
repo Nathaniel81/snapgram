@@ -30,6 +30,28 @@ export const useGetUsers = (limit?: number) => {
   });
 };
 
+const getSearchedUsers = async (searchTerm: string) => {
+  const response = await axios.get(`/api/user/search?query=${searchTerm}`);
+  return response.data;
+};
+export const useGetSearchedUsers = (searchTerm: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SEARCHED_USERS, searchTerm],
+    queryFn: () => getSearchedUsers(searchTerm),
+  });
+};
+
+const getUser = async (id?: string) => {
+  const response = await axios.get(`/api/user/${id}/`);
+  return response.data;
+};
+export const useGetUser = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+    queryFn: () => getUser(id),
+  });
+};
+
 const signOutAccount = async () => {
   const response = await axios.post('/api/user/logout/');
   localStorage.removeItem('userInfo');
@@ -257,5 +279,16 @@ export const useLikedPosts = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_LIKED_POSTS],
     queryFn: () => likedPosts(),
+  });
+}
+
+export const roomMessages = async (roomName: string) => {
+  const response = await axios.get(`/api/chat/${roomName}/messages`);
+  return response.data;
+};
+export const useGetRoomMessages = (roomName: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ROOM_MESSAGES],
+    queryFn: () => roomMessages(roomName),
   });
 }

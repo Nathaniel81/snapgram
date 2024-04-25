@@ -59,3 +59,11 @@ export type INavLink = {
     likes?: string[];
     saved_by?: string[];
   };
+
+  export type Message = {
+    id: string;
+    user: IUser;
+    message: string;
+    room: string;
+    timestamp?: string;
+  };

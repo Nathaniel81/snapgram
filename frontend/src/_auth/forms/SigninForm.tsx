@@ -25,7 +25,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { useToast } from "../../components/ui/use-toast";
 import { SigninValidation } from "../../lib/validation";
-import { resetUserInfo } from "../../redux/slices/authSlice";
+// import { resetUserInfo } from "../../redux/slices/authSlice";
 
 const SigninForm = () => {
   const userLogin = useSelector((state: RootState) => state.user);
@@ -50,8 +50,8 @@ const SigninForm = () => {
   useEffect(() => {
     if (error) {
       toast({ title: "Incorrect email or password. Please try again." });
-      dispatch(resetUserInfo());
     }
+    console.log('Signin Page')
   }, [error, toast, dispatch]);
   
 

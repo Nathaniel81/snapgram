@@ -266,3 +266,23 @@ class GetUserView(generics.RetrieveAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+class SearchUsersView(generics.ListAPIView):
+    """
+    View for searching users.
+
+    This view returns a list of users filtered by a search query.
+    """
+
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        """
+        Get the queryset of users filtered by a search query.
+
+        This method filters the queryset to include only users containing the search query in their name or username.
+        """
+
+        query = self.request.query_params.get('query', '')
+        queryset = User.objects.filter(Q(username__icontains=query) | Q(name__icontains=query))
+        return queryset

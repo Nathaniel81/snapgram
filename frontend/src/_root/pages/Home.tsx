@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/shared/Loader";
@@ -8,20 +8,26 @@ import { IUser } from "../../types";
 import PostCard from "../../components/shared/PostCard";
 import { Post } from "../../types";
 import { useGetRecentPosts } from "../../lib/react-query/queries";
+// import { Link } from "react-router-dom";
+import { AppDispatch } from "../../redux/store";
+import { resetUserInfo } from "../../redux/slices/authSlice";
+import UserCard from "../../components/shared/UserCard";
 
 
 const Home = () => {
     const userLogin = useSelector((state: RootState) => state.user);
     const { 
-        userInfo, 
+        userInfo: currentUser, 
       } = userLogin;
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if (!userInfo) {
+        if (!currentUser) {
+            dispatch(resetUserInfo());
             navigate('/sign-in');
         }
-    }, [userInfo, navigate]);
+    }, [currentUser, navigate, dispatch]);
 
     const {
       data: posts,
@@ -74,9 +80,10 @@ const Home = () => {
           ) : (
             <ul className="grid 2xl:grid-cols-2 gap-6">
               {creators?.map((creator: IUser) => (
-                <li key={creator?.id}>
-                  {/* <UserCard user={creator} /> */}
-                  {creator?.id}
+                <li key={creator?.id} 
+                className='cursor-pointer' 
+                onClick={() => navigate(`chat/${creator?.id}`)}>
+                  <UserCard user={creator} />
                 </li>
               ))}
             </ul>
