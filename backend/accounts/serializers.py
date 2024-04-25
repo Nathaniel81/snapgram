@@ -5,6 +5,16 @@ from .models import User
 from cloudinary.utils import cloudinary_url
 
 
+class FollowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'username', 'email', 'profile_picture']
+
+class FollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'username', 'email', 'profile_picture']
+
 class UserSerializer(serializers.ModelSerializer):
     """
     Serializer for the User model.
@@ -12,9 +22,12 @@ class UserSerializer(serializers.ModelSerializer):
     This serializer is used to serialize User objects.
     """
 
+    followers = FollowerSerializer(many=True, read_only=True)
+    following = FollowingSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture']
+        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture', 'followers', 'following']
 
     def get__id(self, obj):
         """Get the id field value."""

@@ -1,13 +1,15 @@
+from core.authenticate import CustomAuthentication
 from django.conf import settings
-from rest_framework import generics
+from rest_framework import generics, permissions, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt import tokens
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User
-from .serializers import MyTokenObtainPairSerializer, RegistrationSerializer, UserSerializer
-from core.authenticate import CustomAuthentication
+from .serializers import (MyTokenObtainPairSerializer, RegistrationSerializer,
+                          UserSerializer)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -286,3 +288,24 @@ class SearchUsersView(generics.ListAPIView):
         query = self.request.query_params.get('query', '')
         queryset = User.objects.filter(Q(username__icontains=query) | Q(name__icontains=query))
         return queryset
+
+class FollowUserView(APIView):
+    """
+    View to follow or unfollow a user.
+    """
+
+    authentication_classes = [CustomAuthentication]
+
+    def post(self, request, user_id):
+        user_to_follow = User.objects.get(pk=user_id)
+        current_user = request.user
+
+        if user_to_follow == current_user:
+            return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_to_follow in current_user.following.all():
+            current_user.following.remove(user_to_follow)
+            return Response({"message": f"You have unfollowed {user_to_follow.username}."}, status=status.HTTP_200_OK)
+        else:
+            current_user.following.add(user_to_follow)
+            return Response({"message": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)

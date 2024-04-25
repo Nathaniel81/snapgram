@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from cloudinary.models import CloudinaryField
-
 
 class User(AbstractUser):
     name = models.CharField(max_length=100, null=True, blank=True)
@@ -10,6 +9,8 @@ class User(AbstractUser):
     dob = models.DateField(null=True, blank=True, verbose_name="Date of Birth")
     profile_picture = CloudinaryField('image', null=True, blank=True)
     bio = models.TextField(max_length=500, null=True, blank=True)
+
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
