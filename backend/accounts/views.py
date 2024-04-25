@@ -1,6 +1,7 @@
 from core.authenticate import CustomAuthentication
 from django.conf import settings
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -289,23 +290,31 @@ class SearchUsersView(generics.ListAPIView):
         queryset = User.objects.filter(Q(username__icontains=query) | Q(name__icontains=query))
         return queryset
 
-class FollowUserView(APIView):
+class FollowUserView(generics.UpdateAPIView):
     """
     View to follow or unfollow a user.
     """
 
+    serializer_class = UserSerializer
     authentication_classes = [CustomAuthentication]
 
-    def post(self, request, user_id):
-        user_to_follow = User.objects.get(pk=user_id)
-        current_user = request.user
+    def get_object(self):
+        user_id = self.kwargs.get('pk')
+        return User.objects.get(pk=user_id)
 
-        if user_to_follow == current_user:
+    def patch(self, request, *args, **kwargs):
+        user = self.get_object()
+        current_user = self.request.user
+
+        if current_user.is_anonymous:
+            raise PermissionDenied("You must be logged in to follow a user")
+
+        if user == current_user:
             return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user_to_follow in current_user.following.all():
-            current_user.following.remove(user_to_follow)
-            return Response({"message": f"You have unfollowed {user_to_follow.username}."}, status=status.HTTP_200_OK)
+        if user in current_user.following.all():
+            current_user.following.remove(user)
+            return Response({"message": f"You have unfollowed {user.username}."}, status=status.HTTP_200_OK)
         else:
-            current_user.following.add(user_to_follow)
-            return Response({"message": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
+            current_user.following.add(user)
+            return Response({"message": f"You are now following {user.username}."}, status=status.HTTP_200_OK)
