@@ -140,7 +140,7 @@ const Profile = () => {
                 </p>
               </Link>
             </div>
-            <div className={`${id === currentUser?.id && "hidden"}`}>
+            <div className={`${id == currentUser?.id && "hidden"}`}>
               <Button 
                 type="button" 
                 className="shad-button_primary px-8"

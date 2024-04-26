@@ -1,5 +1,6 @@
 from core.authenticate import CustomAuthentication
 from django.conf import settings
+from django.db.models import Count
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
@@ -215,30 +216,50 @@ class RefreshTokenView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+# class UserListView(generics.ListAPIView):
+#     """
+#     View for listing users.
+
+#     This view returns a list of users serialized using the UserSerializer.
+#     """
+
+#     serializer_class = UserSerializer
+
+#     def get_queryset(self):
+#         """
+#         Get the queryset of users.
+
+#         This method filters the queryset based on the 'limit' query parameter if provided.
+
+#         Returns:
+#             queryset: The filtered queryset of users.
+#         """
+
+#         limit = self.request.query_params.get('limit')
+#         if limit and limit.isdigit():
+#             return User.objects.all()[:int(limit)]
+#         else:
+#             return User.objects.all()
+
 class UserListView(generics.ListAPIView):
-    """
-    View for listing users.
-
-    This view returns a list of users serialized using the UserSerializer.
-    """
-
     serializer_class = UserSerializer
+    authentication_classes = [CustomAuthentication]
 
     def get_queryset(self):
-        """
-        Get the queryset of users.
+        limit = int(self.request.query_params.get('limit', 5))
 
-        This method filters the queryset based on the 'limit' query parameter if provided.
+        authenticated_user = self.request.user
 
-        Returns:
-            queryset: The filtered queryset of users.
-        """
+        queryset = User.objects.all()
 
-        limit = self.request.query_params.get('limit')
-        if limit and limit.isdigit():
-            return User.objects.all()[:int(limit)]
-        else:
-            return User.objects.all()
+        if authenticated_user:
+            print("True", authenticated_user)
+            queryset = queryset.exclude(pk=authenticated_user.pk)
+
+        queryset = queryset.annotate(num_followers=Count('followers')).order_by('-num_followers')[:limit]
+
+        return queryset
+
 
 class UserUpdateView(generics.UpdateAPIView):
     """

@@ -59,6 +59,7 @@ export type INavLink = {
     tags?: string;
     file?: URL;
     createdAt?: string;
+    comments: string[];
     likes?: string[];
     saved_by?: string[];
   };

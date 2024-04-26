@@ -10,9 +10,9 @@ export const sidebarLinks = [
       label: "Explore",
     },
     {
-      imgURL: "/assets/icons/people.svg",
+      imgURL: "/assets/icons/chat.svg",
       route: "/all-users",
-      label: "People",
+      label: "Chat",
     },
     {
       imgURL: "/assets/icons/bookmark.svg",
