@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='ChatMessage',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('message', models.CharField(max_length=10000000000)),
+                ('message', models.CharField(max_length=10000)),
                 ('is_read', models.BooleanField(default=False)),
                 ('date', models.DateTimeField(auto_now_add=True)),
                 ('reciever', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='reciever', to=settings.AUTH_USER_MODEL)),
