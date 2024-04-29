@@ -1,10 +1,13 @@
 FROM python:3.11.4-slim-bullseye
 WORKDIR /app
 
+# Install GCC
+
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
 # install system dependencies
+RUN apt-get update && apt-get install -y gcc
 RUN apt-get update && apt-get install -y python3-venv
 
 # create and activate virtual environment
