@@ -14,13 +14,12 @@ export type SearchResultProps = {
 };
 
 
-const AllUsers = () => {
+const Friends = () => {
   const userLogin = useSelector((state: RootState) => state.user);
   const { userInfo: currentUser } = userLogin;
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
 
-  // Filter friends directly in the component
   const friendsToDisplay = searchValue
     ? currentUser?.friends?.filter((user: IUser) =>
         user?.name?.toLowerCase().includes(searchValue.toLowerCase())
@@ -82,4 +81,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default Friends;

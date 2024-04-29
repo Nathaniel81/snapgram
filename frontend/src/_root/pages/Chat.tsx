@@ -17,7 +17,7 @@ import Loader from "../../components/shared/Loader";
 const Chat = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: slelectedUser } = useGetUser(id)
+  const { data: slelectedUser } = useGetUser(id);
   const userLogin = useSelector((state: RootState) => state.user);
   const {
     data: creators,
@@ -60,6 +60,7 @@ const Chat = () => {
         ws.close();
       }
     };
+    //eslint-disable-next-line
   }, []);
   
   useEffect(() => {
@@ -68,7 +69,7 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const handleNewMessageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNewMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewMessage(event.target.value);
   };
 
@@ -151,7 +152,7 @@ return (
       <textarea 
         className="flex-1 shad-textarea-msg text-left align-top pl-2" 
         value={newMessage} 
-        onChange={handleNewMessageChange} 
+        onChange={(event) => handleNewMessageChange(event as React.ChangeEvent<HTMLTextAreaElement>)}
       />
         <Button type="submit" className="shad-button_primary">
           Send
