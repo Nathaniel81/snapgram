@@ -108,12 +108,15 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'snapgram.wsgi.application'
 ASGI_APPLICATION = 'snapgram.asgi.application'
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            # "hosts": [('127.0.0.1', 6379)],
             # "hosts": os.getenv('REDIS_URL'),
+            "hosts": [os.getenv('REDIS_URL', 'redis://localhost:6379')],
         },
     },
 }
