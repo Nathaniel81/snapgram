@@ -28,7 +28,6 @@ class Message(models.Model):
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_messages')
     message = models.TextField()
-    # message = models.CharField(max_length=1000)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

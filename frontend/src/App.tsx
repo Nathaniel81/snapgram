@@ -1,4 +1,6 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+// import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AuthLayout from "./_auth/AuthLayout";
 import SigninForm from "./_auth/forms/SigninForm";
@@ -12,7 +14,7 @@ import {
   EditPost,
   PostDetails,
   UpdateProfile,
-  AllUsers,
+  Friends,
   Chat
  } from "./_root/pages";
 import RootLayout from "./_root/pages/RootLayout";
@@ -37,7 +39,7 @@ function App() {
               <Route path="/explore" element={<Explore />} />
               <Route path="/saved" element={<Saved />} />
               <Route path="/chat/:id" element={<Chat />} />
-              <Route path="/all-users" element={<AllUsers />} />
+              <Route path="/friends" element={<Friends />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/update-post/:id" element={<EditPost />} />
               <Route path="/posts/:id" element={<PostDetails />} />

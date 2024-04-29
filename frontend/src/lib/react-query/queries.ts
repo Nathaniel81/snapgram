@@ -41,11 +41,11 @@ export const useGetSearchedUsers = (searchTerm: string) => {
   });
 };
 
-const getUser = async (id: string) => {
+const getUser = async (id: string | undefined) => {
   const response = await axios.get(`/api/user/${id}/`);
   return response.data;
 };
-export const useGetUser = (id: string) => {
+export const useGetUser = (id: string | undefined) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_BY_ID, id],
     queryFn: () => getUser(id),
