@@ -136,7 +136,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         ) : (
           <div className="file_uploader-box ">
             <img
-              src="/assets/icons/file-upload.svg"
+              src="/static/assets/icons/file-upload.svg"
               width={96}
               height={77}
               alt="file upload"

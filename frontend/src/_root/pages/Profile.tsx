@@ -95,7 +95,7 @@ const Profile = () => {
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           <img
             src={
-              user?.profile_picture || "/assets/icons/profile-placeholder.svg"
+              user?.profile_picture || "/static/assets/icons/profile-placeholder.svg"
             }
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
@@ -130,7 +130,7 @@ const Profile = () => {
                   id != currentUser?.id && "hidden"
                 }`}>
                 <img
-                  src={"/assets/icons/edit.svg"}
+                  src={"/static/assets/icons/edit.svg"}
                   alt="edit"
                   width={20}
                   height={20}
@@ -146,9 +146,9 @@ const Profile = () => {
                 className="shad-button_primary px-8"
                 onClick={() => followUser({id})}
               >
-                {currentUser && currentUser.friends.some(user => user.id == id) ? "Friends" :
-                 (currentUser && currentUser.following.some(user => user.id == id) ? "Following" :
-                 (currentUser && currentUser.followers.some(user => user.id == id) ? "Followback" : "Follow"))}
+                {currentUser && currentUser?.friends?.some(user => user.id == id) ? "Friends" :
+                 (currentUser && currentUser?.following?.some(user => user.id == id) ? "Following" :
+                 (currentUser && currentUser?.followers?.some(user => user.id == id) ? "Followback" : "Follow"))}
               </Button>
             </div>
           </div>
@@ -163,7 +163,7 @@ const Profile = () => {
               pathname === `/profile/${id}` && "!bg-dark-3"
             }`}>
             <img
-              src={"/assets/icons/posts.svg"}
+              src={"/static/assets/icons/posts.svg"}
               alt="posts"
               width={20}
               height={20}
@@ -176,7 +176,7 @@ const Profile = () => {
               pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
             }`}>
             <img
-              src={"/assets/icons/like.svg"}
+              src={"/static/assets/icons/like.svg"}
               alt="like"
               width={20}
               height={20}

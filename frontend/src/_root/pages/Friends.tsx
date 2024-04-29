@@ -33,7 +33,7 @@ const Friends = () => {
         <div className="explore-inner_container my-10">
           <div className="flex gap-1 px-4 w-full rounded-lg bg-dark-4">
             <img
-              src="/assets/icons/search.svg"
+              src="/static/assets/icons/search.svg"
               width={24}
               height={24}
               alt="search"
@@ -61,7 +61,7 @@ const Friends = () => {
                 <img
                   src={
                     user?.profile_picture ||
-                    "/assets/icons/profile-placeholder.svg"
+                    "/static/assets/icons/profile-placeholder.svg"
                   }
                   alt="user"
                   className="w-12 h-12 rounded-full"
