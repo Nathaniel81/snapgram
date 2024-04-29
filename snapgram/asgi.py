@@ -22,7 +22,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from core.routing import websocket_urlpatterns
 from channels.auth import AuthMiddlewareStack
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'communigram.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'snapgram.settings')
 
 application = get_asgi_application()
 

@@ -17,6 +17,7 @@ from pathlib import Path
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -83,7 +84,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'communigram.urls'
+ROOT_URLCONF = 'snapgram.urls'
 AUTH_USER_MODEL = 'accounts.User'
 
 TEMPLATES = [
@@ -104,14 +105,15 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'communigram.wsgi.application'
-ASGI_APPLICATION = 'communigram.asgi.application'
+# WSGI_APPLICATION = 'snapgram.wsgi.application'
+ASGI_APPLICATION = 'snapgram.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [('127.0.0.1', 6379)],
+            # "hosts": os.getenv('REDIS_URL'),
         },
     },
 }
@@ -165,11 +167,6 @@ SIMPLE_JWT = {
 #     }
 # }
 
-import dj_database_url
-from dotenv import load_dotenv
-
-load_dotenv()
-
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
@@ -219,7 +216,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend', 'dist'),
-    # BASE_DIR / 'staticfiles/',
 ]
 
 MEDIA_URL = '/media/'
