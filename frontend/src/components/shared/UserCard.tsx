@@ -87,9 +87,9 @@ const UserCard = ({ user }: UserCardProps) => {
           followUser({id});
         }}
       >
-        {currentUser && currentUser.friends.some(u => u.id === user?.id) ? "Friends" :
-         (currentUser && currentUser.following.some(u => u.id === user?.id) ? "Following" :
-         (currentUser && currentUser.followers.some(u => u.id === user?.id) ? "Followback" : "Follow"))}
+        {currentUser && currentUser?.friends?.some(u => u.id === user?.id) ? "Friends" :
+         (currentUser && currentUser?.following?.some(u => u.id === user?.id) ? "Following" :
+         (currentUser && currentUser?.followers?.some(u => u.id === user?.id) ? "Followback" : "Follow"))}
       </Button>
     </Link>
 
