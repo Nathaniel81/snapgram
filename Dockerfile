@@ -9,6 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # install system dependencies
 # RUN apt-get update && apt-get install -y gcc
 RUN apt-get update && apt-get install -y python3-venv
+RUN apt-get install -y build-essential
 
 # create and activate virtual environment
 RUN python3 -m venv /opt/venv
