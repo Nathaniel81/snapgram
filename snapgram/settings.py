@@ -37,6 +37,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Application definition
 
@@ -72,7 +76,8 @@ CLOUDINARY_STORAGE = {
 }
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
+    # 'core.middleware.TokenAuthMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -114,7 +119,7 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [('127.0.0.1', 6379)],
-            # "hosts": os.getenv('REDIS_URL'),
+            # "hosts": [os.getenv('REDIS_URL')]
         },
     },
 }
@@ -151,10 +156,10 @@ SIMPLE_JWT = {
   'AUTH_COOKIE': 'access_token',
   'AUTH_COOKIE_REFRESH': 'refresh_token',
   'AUTH_COOKIE_DOMAIN': None,
-  'AUTH_COOKIE_SECURE': False,
+  'AUTH_COOKIE_SECURE': True,
   'AUTH_COOKIE_HTTP_ONLY' : True,
   'AUTH_COOKIE_PATH': '/',
-  'AUTH_COOKIE_SAMESITE': 'Lax',
+  'AUTH_COOKIE_SAMESITE': 'None',
 }
 
 

@@ -1,14 +1,23 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from core.authenticate import CustomAuthentication
-from core.models import ChatRoom, Message
+
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
+
 from accounts.serializers import UserSerializer
+from core.authenticate import CustomAuthentication
+from core.middleware import TokenAuthMiddleware
+from core.models import ChatRoom, Message
 from core.serializers import MessageSerializer
 
 
-async def message_to_json(message):
-    user = await sync_to_async(getattr)(message, 'user')
+# async def message_to_json(message):
+#     user = await sync_to_async(getattr)(message, 'user')
+#     serializer = MessageSerializer(message)
+#     data = serializer.data
+#     return data
+@database_sync_to_async
+def message_to_json(message):
     serializer = MessageSerializer(message)
     data = serializer.data
     return data
@@ -16,9 +25,10 @@ async def message_to_json(message):
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         cookie_header = dict(self.scope['headers']).get(b'cookie', b'').decode('utf-8')
+        print("COOKIE_HEADER >>>", cookie_header)
 
         cookies = cookie_header.split('; ')
-        # print("Individual cookies:", cookies)
+        print("Individual cookies:", cookies)
 
         raw_token = None
 
@@ -38,6 +48,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             if user_id is None:
                 print("User not authenticated or token is invalid.")
+                await self.accept()
                 await self.send(text_data=json.dumps({"error": "User not authenticated or token is invalid."}))
                 await self.close()
                 return
@@ -53,6 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.accept()
         else:
             print("No access token found in cookies.")
+            await self.accept()
             await self.send(text_data=json.dumps({"error": "No access token found in cookies"}))
             await self.close()
 
@@ -104,4 +116,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
-

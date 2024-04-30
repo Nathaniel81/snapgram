@@ -90,7 +90,7 @@ return (
             <img
               src={
                 slelectedUser?.profile_picture ||
-                "/assets/icons/profile-placeholder.svg"
+                "/static/assets/icons/profile-placeholder.svg"
               }
               alt="user"
               className="w-12 h-12 rounded-full"
@@ -110,11 +110,11 @@ return (
               ref={index === messages.length - 1 ? lastMessageRef : null}
               className={cn(
                 "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-                message?.user?.id === currentUser?.id ? "items-end" : "items-start"
+                message?.user?.id == currentUser?.id ? "items-end" : "items-start"
               )}
             >
               <div className="flex gap-3 items-center">
-                {message?.user?.id === currentUser?.id && (
+                {message?.user?.id == currentUser?.id && (
                   <>
                     <span className="bg-primary-500 p-3 rounded-md max-w-xs">
                       {message.message}
@@ -122,19 +122,19 @@ return (
                     <img
                       src={
                         message?.user?.profile_picture ||
-                        "/assets/icons/profile-placeholder.svg"
+                        "/static/assets/icons/profile-placeholder.svg"
                       }
                       alt="creator"
                       className="w-12 lg:h-12 rounded-full"
                     />
                   </>
                 )}
-                {message?.user?.id !== currentUser?.id && (
+                {message?.user?.id != currentUser?.id && (
                   <>
                     <img
                       src={
                         message?.user?.profile_picture ||
-                        "/assets/icons/profile-placeholder.svg"
+                        "/static/assets/icons/profile-placeholder.svg"
                       }
                       alt="creator"
                       className="w-12 lg:h-12 rounded-full"
