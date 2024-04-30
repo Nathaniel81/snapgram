@@ -29,15 +29,3 @@ class PostSerializer(serializers.ModelSerializer):
             # Add the file URL to the representation
             representation['file'] = cloudinary_url(instance.file.public_id)[0]
         return representation
-
-class MessageSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Message model.
-
-    This serializer handles serialization and deserialization of Message instances.
-    """
-
-    user = UserSerializer(read_only=True)
-    class Meta:
-        model = Message
-        fields = '__all__'

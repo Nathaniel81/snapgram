@@ -1,4 +1,3 @@
-// import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,7 +14,7 @@ import {
   PostDetails,
   UpdateProfile,
   Friends,
-  Chat
+  AllUsers
  } from "./_root/pages";
 import RootLayout from "./_root/pages/RootLayout";
 import "./globals.css";
@@ -38,7 +37,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/explore" element={<Explore />} />
               <Route path="/saved" element={<Saved />} />
-              <Route path="/chat/:id" element={<Chat />} />
+              <Route path="/all-users/" element={<AllUsers />} />
               <Route path="/friends" element={<Friends />} />
               <Route path="/create-post" element={<CreatePost />} />
               <Route path="/update-post/:id" element={<EditPost />} />

@@ -45,7 +45,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -108,20 +107,20 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'snapgram.wsgi.application'
-ASGI_APPLICATION = 'snapgram.asgi.application'
+WSGI_APPLICATION = 'snapgram.wsgi.application'
+# ASGI_APPLICATION = 'snapgram.asgi.application'
 
 REDIS_URL = os.getenv('REDIS_URL')
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            # "hosts": [('127.0.0.1', 6379)],
-            "hosts": [os.getenv('REDIS_URL')]
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             # "hosts": [('127.0.0.1', 6379)],
+#             "hosts": [os.getenv('REDIS_URL')]
+#         },
+#     },
+# }
 
 SIMPLE_JWT = {
   'ACCESS_TOKEN_LIFETIME': timedelta(seconds=3000),

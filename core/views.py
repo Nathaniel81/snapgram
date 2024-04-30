@@ -239,16 +239,3 @@ class LikedPostsView(generics.ListAPIView):
         user = self.request.user
         queryset = Post.objects.filter(likes=user)
         return queryset
-
-class MessageListAPIView(generics.ListAPIView):
-    """
-    View for listing Room Messages.
-
-    This view returns a list of messages on a room.
-    """
-
-    serializer_class = MessageSerializer
-
-    def get_queryset(self):
-        room_name = self.kwargs.get('room_name')
-        return Message.objects.filter(room__name=room_name)

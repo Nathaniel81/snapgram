@@ -1,9 +1,9 @@
 """
-Custom authentication module for handling authentication with JWT and CSRF validation.
+Custom authentication module for handling authentication with JWt.
 
 This module provides a custom authentication class `CustomAuthentication`, which extends
 `rest_framework_simplejwt.authentication.JWTAuthentication` to authenticate users based on
-the httponly cookie access_token and enforce CSRF validation.
+the httponly cookie access_token.
 
 Example usage:
     from custom_auth import CustomAuthentication
@@ -16,28 +16,7 @@ Example usage:
 from rest_framework_simplejwt import authentication as jwt_authentication
 from django.conf import settings
 from rest_framework import authentication, exceptions as rest_exceptions
-from django.middleware.csrf import CsrfViewMiddleware
-from asgiref.sync import sync_to_async
 
-
-def enforce_csrf(request):
-    """
-    Enforce CSRF validation.
-
-    Parameters:
-    - request (HttpRequest): The HTTP request object.
-
-    Raises:
-    - PermissionDenied: If CSRF validation fails.
-    """
-
-    csrf_middleware = CsrfViewMiddleware(request)
-    csrf_token = request.META.get('HTTP_X_CSRFTOKEN', '')
-    request.META['CSRF_COOKIE'] = csrf_token
-    reason = csrf_middleware.process_view(request, None, (), {})
-
-    if reason:
-        raise rest_exceptions.PermissionDenied('CSRF Failed: %s' % reason)
 
 class CustomAuthentication(jwt_authentication.JWTAuthentication):
     """
@@ -48,7 +27,6 @@ class CustomAuthentication(jwt_authentication.JWTAuthentication):
 
     Attributes:
     - authentication_classes: A list of authentication classes.
-    - enforce_csrf: A function to enforce CSRF validation.
     """
 
     def authenticate(self, request):
@@ -67,37 +45,10 @@ class CustomAuthentication(jwt_authentication.JWTAuthentication):
 
         if raw_token is None:
             return None
-        
+
         try:
             validated_token = self.get_validated_token(raw_token)
         except Exception as e:
             return None
 
-        # enforce_csrf(request)
-
         return self.get_user(validated_token), validated_token
-
-    @sync_to_async
-    def authenticate_with_token(self, raw_token):
-        """
-        Authenticate the user based on the httponly cookie access_token for a Websocket connection.
-
-        Parameters:
-        - request (HttpRequest): The HTTP request object.
-
-        Returns:
-        - tuple or None: A tuple of (user, validated_token) if authentication is successful,
-          or None if authentication fails.
-        """
-
-        if raw_token is None:
-            return None, None
-        
-        try:
-            validated_token = self.get_validated_token(raw_token)
-        except Exception as e:
-            return None, None
-        
-        user = self.get_user(validated_token)
-        print('USER: ', user)
-        return user, validated_token

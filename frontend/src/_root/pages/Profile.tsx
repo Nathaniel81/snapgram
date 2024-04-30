@@ -126,7 +126,7 @@ const Profile = () => {
             <div className={`${id != currentUser?.id && "hidden"}`}>
               <Link
                 to={`/update-profile/${currentUser?.id}`}
-                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
+                className={`h-12 bg-dark-4 hover:bg-slate-900 px-5 text-light-1 flex-center gap-2 rounded-lg ${
                   id != currentUser?.id && "hidden"
                 }`}>
                 <img
