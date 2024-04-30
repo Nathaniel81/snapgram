@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-_+efuy+@f#c6phd$=swnju2ic!e4tj0^#%!839l@j$rza96@u=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['snapgram-bklw.onrender.com']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
