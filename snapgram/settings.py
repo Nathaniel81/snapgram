@@ -76,7 +76,6 @@ CLOUDINARY_STORAGE = {
 }
 
 MIDDLEWARE = [
-    # 'core.middleware.TokenAuthMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -118,8 +117,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-            # "hosts": [os.getenv('REDIS_URL')]
+            # "hosts": [('127.0.0.1', 6379)],
+            "hosts": [os.getenv('REDIS_URL')]
         },
     },
 }

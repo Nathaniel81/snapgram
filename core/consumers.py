@@ -6,7 +6,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 from accounts.serializers import UserSerializer
 from core.authenticate import CustomAuthentication
-from core.middleware import TokenAuthMiddleware
 from core.models import ChatRoom, Message
 from core.serializers import MessageSerializer
 
