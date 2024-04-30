@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .authenticate import CustomAuthentication
-from .models import Post, Message
-from .serializers import PostSerializer, MessageSerializer
+from .models import Post
+from .serializers import PostSerializer
 from django.db.models import Q
 
 

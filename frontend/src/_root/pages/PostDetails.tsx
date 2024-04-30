@@ -25,9 +25,7 @@ const PostDetails = () => {
   const { id } = useParams();
 
   const { data: post, isLoading } = useGetPostById(id);
-  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
-    post?.creator?.id
-  );
+  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(post?.creator?.id);
   const { mutate: deletePost } = useDeletePost();
 
   const relatedPosts = userPosts?.filter(

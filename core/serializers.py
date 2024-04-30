@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Message
+from .models import Post
 from cloudinary.utils import cloudinary_url
 from accounts.serializers import UserSerializer
 
