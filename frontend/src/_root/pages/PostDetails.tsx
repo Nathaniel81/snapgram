@@ -29,8 +29,11 @@ const PostDetails = () => {
   const { mutate: deletePost } = useDeletePost();
 
   const relatedPosts = userPosts?.filter(
-    (userPost: Post) => userPost.id !== id
+    (userPost: Post) => {
+      return String(userPost.id) !== id;
+    }
   );
+  
 
   const handleDeletePost = () => {
     deletePost({ postId: id });

@@ -26,11 +26,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-print("BASE_DIR >>> ", BASE_DIR)
+# print("BASE_DIR >>> ", BASE_DIR)
 
 # Print directories and files in BASE_DIR
-for name in os.listdir(BASE_DIR):
-    print(name)
+# for name in os.listdir(BASE_DIR):
+#     print(name)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -41,7 +41,6 @@ SECRET_KEY = 'django-insecure-_+efuy+@f#c6phd$=swnju2ic!e4tj0^#%!839l@j$rza96@u=
 DEBUG = True
 
 
-# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['snapgram-j48j.onrender.com']
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -101,7 +100,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # os.path.join(BASE_DIR, 'frontend/dist/'),
             os.path.join(BASE_DIR, 'staticfiles/')
         ],
         'APP_DIRS': True,
@@ -227,7 +225,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    # os.path.join(BASE_DIR, 'frontend', 'dist'),
     BASE_DIR / 'static/',
     BASE_DIR / 'frontend/dist/',
 ]

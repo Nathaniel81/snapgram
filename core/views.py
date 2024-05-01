@@ -136,6 +136,8 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     This view allows users to retrieve, update, or delete a specific post.
     """
 
+    authentication_classes = [CustomAuthentication]
+
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
