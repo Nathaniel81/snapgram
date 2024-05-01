@@ -37,7 +37,7 @@ DEBUG = True
 
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['snapgram-bklw.onrender.com']
+ALLOWED_HOSTS = ['snapgram-j48j.onrender.com']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
