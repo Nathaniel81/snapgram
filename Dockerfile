@@ -1,6 +1,5 @@
-FROM python:3.10-slim-bullseye
+FROM python:3.11.4-slim-bullseye
 WORKDIR /app
-
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
