@@ -8,7 +8,6 @@ import { IUser } from "../../types";
 import PostCard from "../../components/shared/PostCard";
 import { Post } from "../../types";
 import { useGetRecentPosts } from "../../lib/react-query/queries";
-// import { Link } from "react-router-dom";
 import { AppDispatch } from "../../redux/store";
 import { resetUserInfo } from "../../redux/slices/authSlice";
 import UserCard from "../../components/shared/UserCard";

@@ -43,7 +43,6 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 
 const Profile = () => {
   const { id } = useParams();
-  // const parsedId = parseInt(id ?? '', 10);
   const { toast } = useToast();
   const { data: userPosts, isLoading } = useGetUserPosts(id);
   const { pathname } = useLocation();

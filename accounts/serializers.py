@@ -6,11 +6,21 @@ from cloudinary.utils import cloudinary_url
 
 
 class FollowerSerializer(serializers.ModelSerializer):
+    """
+    Serializer for representing followers of a user.
+    
+    This serializer includes only the 'id' field of the User model.
+    """
     class Meta:
         model = User
         fields = ['id']
 
 class FollowingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for representing users that a user is following.
+    
+    This serializer includes only the 'id' field of the User model.
+    """
     class Meta:
         model = User
         fields = ['id']
@@ -46,7 +56,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'name', 'email', 'bio', 'profile_picture', 'followers', 'following', 'friends']
+        fields = [
+            'id',
+            'username',
+            'name',
+            'email',
+            'bio',
+            'profile_picture',
+            'followers',
+            'following',
+            'friends',
+        ]
+
 
     def get__id(self, obj):
         """Get the id field value."""
@@ -120,7 +141,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'name', 'email', 'password', 'confirmPassword', 'tokens', 'token']
+        fields = [
+            'id', 
+            'username', 
+            'name', 
+            'email', 
+            'password', 
+            'confirmPassword', 
+            'tokens', 
+            'token'
+        ]
         read_only_fields = ['id']
 
     def validate(self, data):

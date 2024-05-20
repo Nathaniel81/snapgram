@@ -21,37 +21,23 @@ const initialState: UserState = {
 
 export const login = createAsyncThunk(
   'user/login',
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    try {
-      const config = {
-        headers: {
-          'Content-type': 'application/json'
-        }
-      }
-      const { data } = await axios.post(`/api/user/login/`, { email, password }, config)
-      localStorage.setItem('userInfo', JSON.stringify(data))
-      return data
-    } catch (error) {
-		const err = error as AxiosError
-		return rejectWithValue(err.response?.data)
-    }
-  }
-)
-
-export const register = createAsyncThunk(
-  'user/register',
   async (
-    { name, username, email, password, confirmPassword }: 
-    { name: string; username: string; email: string; password: string, confirmPassword: string }, 
+    { email, password }: { email: string; password: string }, 
     { rejectWithValue }
   ) => {
     try {
       const config = {
         headers: {
-          'Content-type': 'application/json'
-        }
-      }
-      const { data } = await axios.post(`/api/user/register/`, { name, username, email, password, confirmPassword }, config);
+          'Content-type': 'application/json',
+        },
+      };
+
+      const { data } = await axios.post(
+        `/api/user/login/`,
+        { email, password },
+        config
+      );
+
       localStorage.setItem('userInfo', JSON.stringify(data));
       return data;
     } catch (error) {
@@ -59,7 +45,52 @@ export const register = createAsyncThunk(
       return rejectWithValue(err.response?.data);
     }
   }
-)
+);
+
+
+export const register = createAsyncThunk(
+  'user/register',
+  async (
+    { name, username, email, password, confirmPassword }: 
+    { 
+      name: string; 
+      username: string; 
+      email: string; 
+      password: string, 
+      confirmPassword: string 
+    }, 
+    { rejectWithValue }
+  ) => {
+    try {
+      const config = {
+        headers: {
+          'Content-type': 'application/json'
+        }
+      };
+
+      const userData = { 
+        name, 
+        username, 
+        email, 
+        password, 
+        confirmPassword 
+      };
+
+      const { data } = await axios.post(
+        `/api/user/register/`, 
+        userData, 
+        config
+      );
+
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      return data;
+    } catch (error) {
+      const err = error as AxiosError;
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
+
 
 const authSlice = createSlice({
   name: 'auth',

@@ -14,5 +14,5 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     saved_by = models.ManyToManyField(User, related_name='saved_posts', blank=True)
 
-    # def __str__(self):
-    #     return self.creator.id
+    def __str__(self):
+        return str(self.creator.id)

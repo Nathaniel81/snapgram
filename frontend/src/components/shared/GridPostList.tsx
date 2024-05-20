@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 
 import PostStats from "./PostStats";
 import { Post } from "../../types";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../redux/rootReducer";
+
 
 type GridPostListProps = {
   posts: Post[];
