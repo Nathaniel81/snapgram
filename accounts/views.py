@@ -240,7 +240,10 @@ class UserListView(generics.ListAPIView):
         if authenticated_user:
             queryset = queryset.exclude(pk=authenticated_user.pk)
 
-        queryset = queryset.annotate(num_followers=Count('followers')).order_by('-num_followers')
+        queryset = queryset.annotate(
+            num_followers=Count('followers'),
+            num_posts=Count('posts')
+        ).order_by('-num_followers', '-num_posts')
 
         if limit is not None:
             limit = int(limit)
