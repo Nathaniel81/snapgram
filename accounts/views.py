@@ -1,18 +1,23 @@
-from core.authenticate import CustomAuthentication
 from django.conf import settings
 from django.db.models import Count
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt import tokens
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from core.authenticate import CustomAuthentication
 
 from .models import User
 from .serializers import (MyTokenObtainPairSerializer, RegistrationSerializer,
                           UserSerializer)
 
+
+class LoginRateThrottle(AnonRateThrottle):
+    rate = '5/hour'
 
 class MyTokenObtainPairView(TokenObtainPairView):
     """
@@ -20,6 +25,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
     """
 
     serializer_class = MyTokenObtainPairSerializer
+    throttle_classes = [LoginRateThrottle]
 
     def post(self, request, *args, **kwargs):
         """
@@ -35,14 +41,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
         Returns:
             Response: The HTTP response.
-
         """
 
         # Call the super method to perform default token generation
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            access_token = response.data['access']
-            refresh_token = response.data['refresh']
+            access_token = response.data.pop('access', None)
+            refresh_token = response.data.pop('refresh', None)
             # Set httponly flag for access and refresh tokens
             response.set_cookie(
                 key=settings.SIMPLE_JWT['AUTH_COOKIE'],
@@ -61,7 +66,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
                 samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
             )
         return response
-
 class RegistrationView(generics.CreateAPIView):
     """
     Custom registration view for creating user accounts and setting authentication cookies.
@@ -92,12 +96,12 @@ class RegistrationView(generics.CreateAPIView):
 
         # Construct the response with serialized user data
         response = Response({
-            'response': 'Successfully registered',
             'id': serializedData['id'],
-            'username': serializedData['username'],
             'name': serializedData['name'],
+            'username': serializedData['username'],
             'email': serializedData['email'],
-        })
+        }, status=status.HTTP_201_CREATED)
+
         access_token =  serializedData.get('access_token')
         refresh_token =  serializedData.get('refresh_token')
 
@@ -216,50 +220,33 @@ class RefreshTokenView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-# class UserListView(generics.ListAPIView):
-#     """
-#     View for listing users.
-
-#     This view returns a list of users serialized using the UserSerializer.
-#     """
-
-#     serializer_class = UserSerializer
-
-#     def get_queryset(self):
-#         """
-#         Get the queryset of users.
-
-#         This method filters the queryset based on the 'limit' query parameter if provided.
-
-#         Returns:
-#             queryset: The filtered queryset of users.
-#         """
-
-#         limit = self.request.query_params.get('limit')
-#         if limit and limit.isdigit():
-#             return User.objects.all()[:int(limit)]
-#         else:
-#             return User.objects.all()
-
 class UserListView(generics.ListAPIView):
+    """
+    View for listing users.
+
+    This view returns a list of users serialized using the UserSerializer.
+    """
+
     serializer_class = UserSerializer
     authentication_classes = [CustomAuthentication]
 
     def get_queryset(self):
-        limit = int(self.request.query_params.get('limit', 5))
-
+        limit = self.request.query_params.get('limit')
+        
         authenticated_user = self.request.user
 
         queryset = User.objects.all()
 
         if authenticated_user:
-            print("True", authenticated_user)
             queryset = queryset.exclude(pk=authenticated_user.pk)
 
-        queryset = queryset.annotate(num_followers=Count('followers')).order_by('-num_followers')[:limit]
+        queryset = queryset.annotate(num_followers=Count('followers')).order_by('-num_followers')
+
+        if limit is not None:
+            limit = int(limit)
+            queryset = queryset[:limit]
 
         return queryset
-
 
 class UserUpdateView(generics.UpdateAPIView):
     """
