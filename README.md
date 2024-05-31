@@ -1,5 +1,5 @@
 # Snapgram Social Media App
-
+ 
 ## Overview
 This is a simple social media application built with Django, React, Tailwind CSS, Shadcnui, and PostgreSQL. It uses Redux with Redux Toolkit for state management and Cloudinary for image hosting. This app is a personal portfolio project created for learning purposes, with a focus on frontend development using ReactJS.
 
