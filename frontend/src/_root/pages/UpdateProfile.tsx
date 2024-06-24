@@ -102,7 +102,7 @@ const UpdateProfile = () => {
       <div className="common-container">
         <div className="flex-start gap-3 justify-start w-full max-w-5xl">
           <img
-            src="/static/assets/icons/edit.svg"
+            src="/assets/icons/edit.svg"
             width={36}
             height={36}
             alt="edit"
@@ -124,7 +124,7 @@ const UpdateProfile = () => {
               className="cursor-pointer" />
               <div className="cursor-pointer flex-start gap-4 py-5" onClick={handleClick}>
                 <img
-                  src={fileUrl || "/static/assets/icons/profile-placeholder.svg"}
+                  src={fileUrl || "/assets/icons/profile-placeholder.svg"}
                   alt="image"
                   className="h-24 w-24 rounded-full object-cover object-top"
                 />

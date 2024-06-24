@@ -1,26 +1,26 @@
 export const sidebarLinks = [
     {
-      imgURL: "/static/assets/icons/home.svg",
+      imgURL: "/assets/icons/home.svg",
       route: "/",
       label: "Home",
     },
     {
-      imgURL: "/static/assets/icons/wallpaper.svg",
+      imgURL: "/assets/icons/wallpaper.svg",
       route: "/explore",
       label: "Explore",
     },
     {
-      imgURL: "/static/assets/icons/people.svg",
+      imgURL: "/assets/icons/people.svg",
       route: "/all-users",
       label: "People",
     },
     {
-      imgURL: "/static/assets/icons/bookmark.svg",
+      imgURL: "/assets/icons/bookmark.svg",
       route: "/saved",
       label: "Saved",
     },
     {
-      imgURL: "/static/assets/icons/gallery-add.svg",
+      imgURL: "/assets/icons/gallery-add.svg",
       route: "/create-post",
       label: "Create Post",
     },
@@ -28,22 +28,22 @@ export const sidebarLinks = [
 
   export const bottombarLinks = [
     {
-      imgURL: "/static/assets/icons/home.svg",
+      imgURL: "/assets/icons/home.svg",
       route: "/",
       label: "Home",
     },
     {
-      imgURL: "/static/assets/icons/wallpaper.svg",
+      imgURL: "/assets/icons/wallpaper.svg",
       route: "/explore",
       label: "Explore",
     },
     {
-      imgURL: "/static/assets/icons/bookmark.svg",
+      imgURL: "/assets/icons/bookmark.svg",
       route: "/saved",
       label: "Saved",
     },
     {
-      imgURL: "/static/assets/icons/gallery-add.svg",
+      imgURL: "/assets/icons/gallery-add.svg",
       route: "/create-post",
       label: "Create",
     },

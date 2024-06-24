@@ -48,7 +48,7 @@ const PostDetails = () => {
           variant="ghost"
           className="shad-button_ghost">
           <img
-            src={"/static/assets/icons/back.svg"}
+            src={"/assets/icons/back.svg"}
             alt="back"
             width={24}
             height={24}
@@ -75,7 +75,7 @@ const PostDetails = () => {
                 <img
                   src={
                     post?.creator.imageUrl ||
-                    "/static/assets/icons/profile-placeholder.svg"
+                    "/assets/icons/profile-placeholder.svg"
                   }
                   alt="creator"
                   className="w-8 h-8 lg:w-12 lg:h-12 rounded-full"
@@ -101,7 +101,7 @@ const PostDetails = () => {
                   to={`/update-post/${post?.id}`}
                   className={`${user?.id !== post?.creator.id && "hidden"}`}>
                   <img
-                    src={"/static/assets/icons/edit.svg"}
+                    src={"/assets/icons/edit.svg"}
                     alt="edit"
                     width={24}
                     height={24}
@@ -115,7 +115,7 @@ const PostDetails = () => {
                     user?.id !== post?.creator?.id && "hidden"
                   }`}>
                   <img
-                    src={"/static/assets/icons/delete.svg"}
+                    src={"/assets/icons/delete.svg"}
                     alt="delete"
                     width={24}
                     height={24}

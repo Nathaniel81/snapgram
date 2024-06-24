@@ -94,7 +94,7 @@ const Profile = () => {
         <div className="flex xl:flex-row flex-col max-xl:items-center flex-1 gap-7">
           <img
             src={
-              user?.profile_picture || "/static/assets/icons/profile-placeholder.svg"
+              user?.profile_picture || "/assets/icons/profile-placeholder.svg"
             }
             alt="profile"
             className="w-28 h-28 lg:h-36 lg:w-36 rounded-full"
@@ -129,7 +129,7 @@ const Profile = () => {
                   id != currentUser?.id && "hidden"
                 }`}>
                 <img
-                  src={"/static/assets/icons/edit.svg"}
+                  src={"/assets/icons/edit.svg"}
                   alt="edit"
                   width={20}
                   height={20}
@@ -162,7 +162,7 @@ const Profile = () => {
               pathname === `/profile/${id}` && "!bg-dark-3"
             }`}>
             <img
-              src={"/static/assets/icons/posts.svg"}
+              src={"/assets/icons/posts.svg"}
               alt="posts"
               width={20}
               height={20}
@@ -175,7 +175,7 @@ const Profile = () => {
               pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
             }`}>
             <img
-              src={"/static/assets/icons/like.svg"}
+              src={"/assets/icons/like.svg"}
               alt="like"
               width={20}
               height={20}
