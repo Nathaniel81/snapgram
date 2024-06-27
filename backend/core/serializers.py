@@ -9,8 +9,6 @@ class CommentLikeSerializer(serializers.ModelSerializer):
         model = CommentLike
         fields = '__all__'
 
-
-
 class CommentSerializer(serializers.ModelSerializer):
     """
     Serializer for comment objects.
@@ -71,5 +69,5 @@ class PostSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         if instance.file:
             # Add the file URL to the representation
-            representation['file'] = cloudinary_url(instance.file.public_id)[0]
+            representation['file'] = cloudinary_url(instance.file.public_id, secure=True)[0]
         return representation

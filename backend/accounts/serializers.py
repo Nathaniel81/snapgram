@@ -40,7 +40,7 @@ class FriendSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         if instance.profile_picture:
             # Add the file URL to the representation
-            representation['profile_picture'] = cloudinary_url(instance.profile_picture.public_id)[0]
+            representation['profile_picture'] = cloudinary_url(instance.profile_picture.public_id, secure=True)[0]
         return representation
 
 class UserBasicSerializer(serializers.ModelSerializer):
@@ -52,6 +52,19 @@ class UserBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name', 'username', 'profile_picture']
+
+    def to_representation(self, instance):
+        """
+        Convert the Post instance to a representation.
+
+        This method overrides the default to_representation method to include the file URL.
+        """
+
+        representation = super().to_representation(instance)
+        if instance.profile_picture:
+            # Add the file URL to the representation
+            representation['profile_picture'] = cloudinary_url(instance.profile_picture.public_id, secure=True)[0]
+        return representation
 
 class UserSerializer(serializers.ModelSerializer):
     """
