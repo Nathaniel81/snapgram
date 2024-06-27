@@ -3,6 +3,8 @@ from core import views
     
 urlpatterns = [
     path('', views.PostsListView.as_view(), name='posts_list'),
+    path('comment/', views.CommentsView.as_view(), name='comments'),
+    path('comments/<int:comment_id>/like/', views.CommentLikeView.as_view(), name='comment-like'),
     path('search/', views.SearchPostsView.as_view(), name='search_posts'),
     path('recent/', views.RecentPostsView.as_view(), name='recent_posts'),
     path('saved/', views.SavedPostsView.as_view(), name='saved_posts'),

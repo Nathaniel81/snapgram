@@ -7,9 +7,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .authenticate import CustomAuthentication
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Comment, CommentLike
+from .serializers import PostSerializer, CommentSerializer, CommentLikeSerializer
 from django.db.models import Q
+from django.db.models import Prefetch
 
 
 class PostCreateView(generics.CreateAPIView):
@@ -138,7 +139,9 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     authentication_classes = [CustomAuthentication]
 
-    queryset = Post.objects.all()
+    queryset = Post.objects.prefetch_related(
+      Prefetch('comments', queryset=Comment.objects.order_by('-created_at'))
+    )
     serializer_class = PostSerializer
 
 class UserPostsView(generics.ListAPIView):
@@ -241,3 +244,36 @@ class LikedPostsView(generics.ListAPIView):
         user = self.request.user
         queryset = Post.objects.filter(likes=user)
         return queryset
+
+class CommentsView(generics.GenericAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    authentication_classes = [CustomAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data.copy()
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Save the comment using the perform_create method
+        self.perform_create(serializer)
+
+        # You can customize the response here
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class CommentLikeView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [CustomAuthentication]
+
+    def post(self, request, comment_id):
+        comment = Comment.objects.get(id=comment_id)
+        user = request.user
+        comment_like, created = CommentLike.objects.get_or_create(user=user, comment=comment)
+        if not created:
+            comment_like.delete()
+            return Response({'status': 'unliked'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'status': 'liked'}, status=status.HTTP_201_CREATED)
