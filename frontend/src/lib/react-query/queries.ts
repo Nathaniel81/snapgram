@@ -6,15 +6,14 @@ import {
 } from "@tanstack/react-query";
 import axios from 'axios';
 import { 
-  // INewPost, 
-  Post 
+  Post,
+  ICommentPayload
 } from "../../types";
 
 import { QUERY_KEYS } from "./queryKeys";
 
 
 // Users Queries
-
 const getUsers = async (limit?: number) => {
   const response = await axios.get('/api/user', {
     params: {
@@ -86,31 +85,62 @@ export const useSignOutAccount = () => {
 };
 
 
+//Comment Queries
+export const createComment = async (data: ICommentPayload) => {
+  const response = await axios.post('/api/post/comment/', data);
+  return response.data;
+};
+
+export const useCreateComment = () => {
+  return useMutation({
+    mutationFn: (data: ICommentPayload) => createComment(data),
+    onSuccess: (data) => {
+    return data;
+    },
+  });
+};
+
+
+export const likeComment = async (comment_id: number) => {
+  const response = await axios.post(`/api/post/comments/${comment_id}/like/`);
+  return response.data;
+}
+export const useLikeComment = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      comment_id,
+    }: {
+      comment_id: number;
+    }) => likeComment(comment_id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID],
+      });
+    },
+  });
+};
+
 //Post Queries
-
-// export const createPost = async (post: FormData) => {
-//   console.log(post)
-//   const config = {
-//     withCredentials: true,
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }
-//   const response = await axios.post('/api/post/create/', post, config);
-//   return response.data;
-// };
-
-// export const useCreatePost = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: (post: FormData) => createPost(post),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-//       });
-//     },
-//   });
-// };
+export const likePost = async (postId: number) => {
+  const response = await axios.post(`/api/post/${postId}/like/`);
+  return response.data;
+}
+export const useLikePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      postId,
+    }: {
+      postId: number;
+    }) => likePost(postId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
 
 export const getRecentPosts = async (): Promise<Post[]> => {
   const config = {
@@ -129,29 +159,7 @@ export const useGetRecentPosts = () => {
   });
 };
 
-
-export const likePost = async (postId: string) => {
-    const response = await axios.post(`/api/post/${postId}/like/`);
-    return response.data;
-}
-export const useLikePost = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      postId,
-    }: {
-      postId: string;
-    }) => likePost(postId),
-    onSuccess: (data) => {
-      console.log(data)
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-      });
-    },
-  });
-};
-
-export const unlikePost = async (postId: string) => {
+export const unlikePost = async (postId: number) => {
     const response = await axios.post(`/api/post/${postId}/unlike/`);
     return response.data;
 };
@@ -161,10 +169,9 @@ export const useUnlikePost = () => {
     mutationFn: ({
       postId,
     }: {
-      postId: string;
+      postId: number;
     }) => unlikePost(postId),
-    onSuccess: (data) => {
-      console.log(data)
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
       });
@@ -172,14 +179,14 @@ export const useUnlikePost = () => {
   });
 };
 
-export const savePost = async (postId: string) => {
+export const savePost = async (postId: number) => {
   const response = await axios.post(`/api/post/${postId}/save/`);
   return response.data;
 };
 export const useSavePost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ postId }: { postId: string }) =>
+    mutationFn: ({ postId }: { postId: number }) =>
       savePost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -189,14 +196,14 @@ export const useSavePost = () => {
   });
 };
 
-export const deleteSavedPost = async (postId: string) => {
+export const deleteSavedPost = async (postId: number) => {
   const response = await axios.post(`/api/post/${postId}/unsave/`);
   return response.data;
 };
 export const useDeleteSavedPost = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ postId }: { postId: string }) =>
+    mutationFn: ({ postId }: { postId: number }) =>
       deleteSavedPost(postId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -244,7 +251,7 @@ export const getUserPosts = async (userId: string) => {
 export const useGetUserPosts = (userId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
-    queryFn: () => getUserPosts(userId!),
+    queryFn: () => getUserPosts(userId ?? ''),
     enabled: !!userId,
   });
 };

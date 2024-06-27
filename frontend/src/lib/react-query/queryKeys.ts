@@ -20,6 +20,9 @@ export enum QUERY_KEYS {
 	GET_SEARCHED_USERS="getSearchedUsers",
 
 	GET_ROOM_MESSAGES = "getRoomMessages",
+
+	// Comment Keys
+	CREATE_COMMENT = "createComment",
   
 	//  SEARCH KEYS
 	SEARCH_POSTS = "getSearchPosts",

@@ -13,6 +13,7 @@ import {
   useGetUserPosts
 } from "../../lib/react-query/queries";
 import { multiFormatDateString } from "../../lib/utils";
+import Comments from "../../components/shared/Comments";
 import { RootState } from "../../redux/rootReducer";
 
 
@@ -25,7 +26,10 @@ const PostDetails = () => {
   const { id } = useParams();
 
   const { data: post, isLoading } = useGetPostById(id);
-  const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(post?.creator?.id);
+  const { 
+    data: userPosts, 
+    isLoading: isUserPostLoading 
+  } = useGetUserPosts(post?.creator?.id);
   const { mutate: deletePost } = useDeletePost();
 
   const relatedPosts = userPosts?.filter(
@@ -143,6 +147,11 @@ const PostDetails = () => {
           </div>
         </div>
       )}
+
+      {/* Comment Section */}
+      <div className="w-full max-w-5xl mt-8">
+        <Comments post={post} />
+      </div>
 
       <div className="w-full max-w-5xl">
         <hr className="border w-full border-dark-4/80" />

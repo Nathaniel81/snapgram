@@ -51,7 +51,6 @@ const SigninForm = () => {
     if (error) {
       toast({ title: "Incorrect email or password. Please try again." });
     }
-    console.log('Signin Page')
   }, [error, toast, dispatch]);
   
 
@@ -66,7 +65,7 @@ const SigninForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <img src="/static/assets/images/logo.svg" alt="logo" />
+        <img src="/assets/images/logo.svg" alt="logo" />
 
         <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
           Log in to your account
