@@ -46,7 +46,7 @@ test_settings.py
 *.pyd
 __pycache__
 *.db
-
+/tasks
 # Ignore user-specific files
 *.sublime-workspace
 *.sublime-project

@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 
 const Ad = ({ size }: { size: "sm" | "md" | "lg" }) => {
   return (
-    <div className="post-card ">
+    <div className="post-card">
       <div className="flex items-center justify-between text-gray-500 font-medium">
         <span>Sponsored Ads</span>
         <img src="/more.png" alt="" width={16} height={16} />

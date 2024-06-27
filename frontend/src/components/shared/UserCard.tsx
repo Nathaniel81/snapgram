@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -26,11 +26,12 @@ const UserCard = ({ user }: UserCardProps) => {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
   const userLogin = useSelector((state: RootState) => state.user);
-  const { 
-      userInfo: currentUser, 
-    } = userLogin;
+  const { userInfo: currentUser } = userLogin;
   const { mutate: followUser, error: followErr, isSuccess } = useFollowUserToggle();
   const followError = followErr as AxiosError;
+  const [isFollowing, setIsFollowing] = useState<boolean>(
+    currentUser?.following?.some(u => u.id === user?.id) || false
+  );
 
   const id = user.id;
 
@@ -38,7 +39,6 @@ const UserCard = ({ user }: UserCardProps) => {
     const fetchData = async () => {
       if (followError) {
         if (followError.response?.status === 403) {
-          console.log('Error');
           toast({ title: 'You must be logged in to follow a user' });
           dispatch(resetUserInfo());
         } else {
@@ -54,9 +54,16 @@ const UserCard = ({ user }: UserCardProps) => {
         }
       }
     };
-  
+
     fetchData();
   }, [followError, isSuccess, dispatch, currentUser?.id, toast]);
+
+  const handleFollowClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFollowing(!isFollowing);
+    followUser({ id });
+  };
 
   return (
     <Link 
@@ -81,18 +88,13 @@ const UserCard = ({ user }: UserCardProps) => {
       <Button 
         type="button" 
         className="shad-button_primary px-8"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          followUser({id});
-        }}
+        onClick={handleFollowClick}
       >
         {currentUser && currentUser?.friends?.some(u => u.id === user?.id) ? "Friends" :
-         (currentUser && currentUser?.following?.some(u => u.id === user?.id) ? "Following" :
+         (isFollowing ? "Following" : 
          (currentUser && currentUser?.followers?.some(u => u.id === user?.id) ? "Followback" : "Follow"))}
       </Button>
     </Link>
-
   );
 };
 

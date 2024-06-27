@@ -57,20 +57,20 @@ export const followUserToggle = async (id: string) => {
   return response.data;
 }
 export const useFollowUserToggle = () => {
-const queryClient = useQueryClient();
-return useMutation({
-  mutationFn: ({
-    id,
-  }: {
-    id?: string;
-  }) => followUserToggle(id ?? ''),
-  onSuccess: (data) => {
-    console.log(data)
-    queryClient.invalidateQueries({
-      queryKey: [QUERY_KEYS.GET_USER_BY_ID],
-    });
-  },
-});
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+    }: {
+      id?: string;
+    }) => followUserToggle(id ?? ''),
+    onSuccess: (data) => {
+      console.log(data)
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+      });
+    },
+  });
 };
 
 const signOutAccount = async () => {

@@ -23,10 +23,10 @@ const Home = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        if (!currentUser) {
-            dispatch(resetUserInfo());
-            navigate('/sign-in');
-        }
+      if (!currentUser) {
+        dispatch(resetUserInfo());
+        navigate('/sign-in');
+      }
     }, [currentUser, navigate, dispatch]);
 
     const {

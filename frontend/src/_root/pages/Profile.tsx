@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
@@ -42,19 +42,30 @@ const StatBlock = ({ value, label }: StabBlockProps) => (
 );
 
 const Profile = () => {
+  const userLogin = useSelector((state: RootState) => state.user);
+  const { 
+      userInfo: currentUser, 
+    } = userLogin;
   const { id } = useParams();
   const { toast } = useToast();
   const { data: userPosts, isLoading } = useGetUserPosts(id);
   const { pathname } = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  const { data: user, isLoading: isUserLoading } = useGetUser(id ?? '');
-  const { mutate: followUser, error: followErr, isSuccess } = useFollowUserToggle();
-  const followError = followErr as AxiosError;
-  
-  const userLogin = useSelector((state: RootState) => state.user);
+  const [isFollowing, setIsFollowing] = useState<boolean>(
+    currentUser?.following?.some(u => u.id === id) || false
+  );
+
+  console.log(isFollowing)
   const { 
-      userInfo: currentUser, 
-    } = userLogin;
+    data: user, 
+    isLoading: isUserLoading 
+  } = useGetUser(id ?? '');
+  const { 
+    mutate: followUser, 
+    error: followErr, 
+    isSuccess 
+  } = useFollowUserToggle();
+  const followError = followErr as AxiosError;
 
     useEffect(() => {
       const fetchData = async () => {
@@ -66,6 +77,7 @@ const Profile = () => {
           } else {
             toast({ title: 'An error occurred while following the user' });
           }
+          setIsFollowing(currentUser?.following?.some(u => u.id === id) || false);
         }
         if (isSuccess) {
           try {
@@ -76,9 +88,15 @@ const Profile = () => {
           }
         }
       };
-    
+  
       fetchData();
-    }, [followError, isSuccess, dispatch, currentUser?.id, toast]);
+    //eslint-disable-next-line
+    }, [followError, isSuccess]);
+  
+    const handleFollowClick = () => {
+      setIsFollowing(!isFollowing);
+      followUser({ id });
+    };
     
   
   if (!currentUser || isLoading || isUserLoading)
@@ -143,10 +161,10 @@ const Profile = () => {
               <Button 
                 type="button" 
                 className="shad-button_primary px-8"
-                onClick={() => followUser({id})}
+                onClick={handleFollowClick}
               >
                 {currentUser && currentUser?.friends?.some(user => user.id == id) ? "Friends" :
-                 (currentUser && currentUser?.following?.some(user => user.id == id) ? "Following" :
+                 (isFollowing ? "Following" : 
                  (currentUser && currentUser?.followers?.some(user => user.id == id) ? "Followback" : "Follow"))}
               </Button>
             </div>
