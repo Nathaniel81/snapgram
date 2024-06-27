@@ -29,7 +29,7 @@ include/
 
 # Compiled Python bytecode
 __pycache__/
-
+/tasks
 # Ignore coverage reports
 htmlcov/
 .coverage
