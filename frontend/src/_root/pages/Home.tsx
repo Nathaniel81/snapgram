@@ -11,6 +11,7 @@ import { useGetRecentPosts } from "../../lib/react-query/queries";
 import { AppDispatch } from "../../redux/store";
 import { resetUserInfo } from "../../redux/slices/authSlice";
 import UserCard from "../../components/shared/UserCard";
+import Ad from "../../components/shared/Ad";
 
 
 const Home = () => {
@@ -38,7 +39,7 @@ const Home = () => {
       data: creators,
       isLoading: isUserLoading,
       isError: isErrorCreators,
-    } = useGetUsers(5);
+    } = useGetUsers(4);
   
     if (isErrorPosts || isErrorCreators) {
       return (
@@ -87,6 +88,7 @@ const Home = () => {
               ))}
             </ul>
           )}
+          <Ad size={'md'} />
         </div>
       </div>
     );
