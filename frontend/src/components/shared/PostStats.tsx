@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
@@ -28,6 +28,7 @@ type PostStatsProps = {
 
 const PostStats = ({ post }: PostStatsProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const userLogin = useSelector((state: RootState) => state.user);
   const {
         userInfo: user, 
@@ -158,12 +159,12 @@ const PostStats = ({ post }: PostStatsProps) => {
   return (
     <div
       className={`flex justify-between items-center z-20 ${containerStyles}`}>
-      <div className="flex gap-2 mr-5">
+      <div className="flex gap-2 items-center">
         <img
           src={`${
             checkIsLiked(likes, user?.id)
-              ? "/static/assets/icons/liked.svg"
-              : "/static/assets/icons/like.svg"
+              ? "/assets/icons/liked.svg"
+              : "/assets/icons/like.svg"
           }`}
           alt="like"
           width={20}
@@ -171,15 +172,24 @@ const PostStats = ({ post }: PostStatsProps) => {
           onClick={(e) => handleLikePost(e)}
           className="cursor-pointer"
         />
-        <p className="small-medium lg:base-medium">{likes.length}</p>
+        <p className="small-medium lg:base-medium pl-1">{likes.length}</p>
+        <img
+          src="/assets/icons/comments.svg"
+          alt="share"
+          width={20}
+          height={20}
+          className="cursor-pointer ml-2 w-7 h-7"
+          onClick={() => navigate(`/posts/${post?.id}`)}
+        />
+        <p className="small-medium lg:base-medium">{post.comments.length}</p>
       </div>
 
       <div className="flex gap-2">
         <img
           src={`${
             checkIsSaved(saved, user?.id)
-              ? "/static/assets/icons/saved.svg"
-              : "/static/assets/icons/save.svg"
+              ? "/assets/icons/saved.svg"
+              : "/assets/icons/save.svg"
             }`}
           alt="share"
           width={20}

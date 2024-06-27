@@ -34,7 +34,7 @@ const GridPostList = ({
                 <img
                   src={
                     post?.creator?.profile_picture ||
-                    "/static/assets/icons/profile-placeholder.svg"
+                    "/assets/icons/profile-placeholder.svg"
                   }
                   alt="creator"
                   className="w-8 h-8 rounded-full"

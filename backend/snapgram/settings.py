@@ -41,7 +41,8 @@ SECRET_KEY = 'django-insecure-_+efuy+@f#c6phd$=swnju2ic!e4tj0^#%!839l@j$rza96@u=
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['snapgram-j48j.onrender.com']
+# ALLOWED_HOSTS = ['snapgram-j48j.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -100,7 +101,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'frontend/dist/')
+            # os.path.join(BASE_DIR, 'frontend/dist/')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -225,9 +226,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend', 'dist')
-]
+STATICFILES_DIRS = []
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -8,7 +8,7 @@ __pycache__/
 db.sqlite3
 
 # Virtual Environment
-/myenv
+/sgenv
 .env/
 
 # Local development settings
