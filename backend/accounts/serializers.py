@@ -43,6 +43,16 @@ class FriendSerializer(serializers.ModelSerializer):
             representation['profile_picture'] = cloudinary_url(instance.profile_picture.public_id)[0]
         return representation
 
+class UserBasicSerializer(serializers.ModelSerializer):
+    """
+    Serializer for basic user information.
+    This serializer includes only the id, name, username, and profile_picture fields.
+    """
+    
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'username', 'profile_picture']
+
 class UserSerializer(serializers.ModelSerializer):
     """
     Serializer for the User model.
@@ -134,8 +144,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     This serializer is used to create user accounts.
     """
 
-    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-    confirmPassword = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    password = serializers.CharField(write_only=True, required=True)
+    confirmPassword = serializers.CharField(write_only=True, required=True)
     tokens = serializers.SerializerMethodField(read_only=True)
     token = serializers.SerializerMethodField(read_only=True)
 
