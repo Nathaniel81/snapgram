@@ -29,4 +29,4 @@ If you have any questions or suggestions, feel free to reach out. I appreciate y
 
 ## Live Demo
 
-Explore the live version of this project on [snapgram-j48j.onrender.com](https://snapgram-j48j.onrender.com).
+Explore the live version of this project on [snapgram-9eaz.onrender.com](https://snapgram-9eaz.onrender.com).
