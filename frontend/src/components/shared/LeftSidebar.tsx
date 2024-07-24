@@ -21,6 +21,7 @@ const LeftSidebar = () => {
 
   const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    navigate('/');
     dispatch(resetUserInfo());
     signOut();
   };
