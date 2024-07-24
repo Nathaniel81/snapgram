@@ -38,7 +38,6 @@ const PostDetails = () => {
     }
   );
   
-
   const handleDeletePost = () => {
     deletePost({ postId: id });
     navigate(-1);

@@ -252,7 +252,10 @@ const Comments = ({ post }: PostCommentProps) => {
             className="w-8 h-8 rounded-full"
           />
           <form id="commentForm"
-            onSubmit={(e) => handleComment(e)}
+            onSubmit={(e) => {
+              toast({title: 'You must be logged in to save a post'});
+              handleComment(e)}
+            }
             className="flex-1 flex items-center justify-between rounded-xl text-sm px-6 py-2"
           >
             <Input

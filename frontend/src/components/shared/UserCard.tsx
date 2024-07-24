@@ -56,11 +56,15 @@ const UserCard = ({ user }: UserCardProps) => {
     };
 
     fetchData();
-  }, [followError, isSuccess, dispatch, currentUser?.id, toast]);
+  }, [followError, isSuccess]);
 
   const handleFollowClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!currentUser) {
+      toast({title: 'You must be logged in'});
+      return;
+    }
     setIsFollowing(!isFollowing);
     followUser({ id });
   };

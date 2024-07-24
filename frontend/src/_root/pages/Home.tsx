@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/rootReducer";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Loader from "../../components/shared/Loader";
 import { useGetUsers } from "../../lib/react-query/queries";
 import { IUser } from "../../types";
@@ -19,15 +19,15 @@ const Home = () => {
     const { 
         userInfo: currentUser, 
       } = userLogin;
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
       if (!currentUser) {
         dispatch(resetUserInfo());
-        navigate('/sign-in');
+        // navigate('/sign-in');
       }
-    }, [currentUser, navigate, dispatch]);
+    }, [currentUser, dispatch]);
 
     const {
       data: posts,

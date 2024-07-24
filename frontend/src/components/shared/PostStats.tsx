@@ -161,15 +161,21 @@ const PostStats = ({ post }: PostStatsProps) => {
       className={`flex justify-between items-center z-20 ${containerStyles}`}>
       <div className="flex gap-2 items-center">
         <img
-          src={`${
+          src={
             checkIsLiked(likes, user?.id)
               ? "/assets/icons/liked.svg"
               : "/assets/icons/like.svg"
-          }`}
+          }
           alt="like"
           width={20}
           height={20}
-          onClick={(e) => handleLikePost(e)}
+          onClick={(e) => {
+            if (!user) {
+              toast({ title: 'You must be logged in to like a post' });
+              return;
+            }
+            handleLikePost(e);
+          }}
           className="cursor-pointer"
         />
         <p className="small-medium lg:base-medium pl-1">{likes.length}</p>
@@ -195,7 +201,13 @@ const PostStats = ({ post }: PostStatsProps) => {
           width={20}
           height={20}
           className="cursor-pointer"
-          onClick={(e) => handleSavePost(e)}
+          onClick={(e) =>{
+            if (!user) {
+              toast({ title: 'You must be logged in to save a post' });
+              return;
+            }
+             handleSavePost(e)}
+          }
         />
       </div>
     </div>

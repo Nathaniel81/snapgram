@@ -36,6 +36,7 @@ class RecentPostsView(generics.ListAPIView):
     """
 
     queryset = Post.objects.all().order_by('-id')[:10]
+    # queryset = Post.objects.exclude(id=11).order_by('-id')[:10]
     serializer_class = PostSerializer
 
 class LikePostView(generics.GenericAPIView):
